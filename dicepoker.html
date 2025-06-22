@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Poker Game</title>
@@ -56,6 +57,17 @@
     #gameContainer {
       line-height: 1.0;
     }
+
+    .dice-held {
+      opacity: 0.6;
+      border: 2px solid red;
+      border-radius: 10px;
+    }
+
+    .dice-img {
+      cursor: pointer;
+      transition: all 0.3s;
+    }
   </style>
 </head>
 
@@ -70,6 +82,7 @@
 
   <script>
     let numPlayers = 0;
+    let heldDice = [false, false, false, false, false, false];
     const ROWS = [
       { label: "1", color: "#fff0f0", editable: true, group: "school" },
       { label: "2", color: "#fff0f0", editable: true, group: "school" },
@@ -88,6 +101,18 @@
       { label: "Poker", color: "#f0f0ff", editable: true },
       { label: "Grand Total", color: "#f0fff0", editable: false, group: "grandTotal" }
     ];
+
+    // Для обработки кликов по кубикам
+    function toggleHold(diceIndex) {
+      heldDice[diceIndex] = !heldDice[diceIndex];
+      const diceElement = document.getElementsByName(['one', 'two', 'three', 'four', 'five', 'six'][diceIndex])[0];
+
+      if (heldDice[diceIndex]) {
+        diceElement.classList.add('dice-held');
+      } else {
+        diceElement.classList.remove('dice-held');
+      }
+    }
 
     function generateTable() {
       //const numPlayers = Math.max(1, parseInt(document.getElementById('numPlayers').value) || 1);
@@ -154,8 +179,6 @@
 
 
     function updateBgColors(player) {
-      SetChecked(0, 'box');
-
       for (let i = 0; i <= 14; ++i) {
         for (let p = 0; p < numPlayers; p++) {
           document.getElementById(`bgcell_${i}_${p - 0}`).style = "border:1px #bbb solid";
@@ -166,6 +189,7 @@
         //document.getElementById(`bgcell_${i}_${player-1}`).style.backgroundColor="#d0d0d0";
         //console.log(document.getElementById(`bgcell_${i}_${player-1}`).style);
       }
+      SetChecked(0, 'box');
     }
 
     function updatePlayerName(player) {
@@ -414,9 +438,7 @@
     }
 
     function roll() {
-      //determine which roll
-      let cnt = parseInt(document.getElementById('counter').textContent);
-      if (isNaN(cnt)) cnt = 0;
+      let cnt = parseInt(document.getElementById('counter').textContent) || 0;
       cnt++;
       document.getElementById('counter').textContent = cnt;
       x++;
@@ -431,49 +453,29 @@
         if (x == 1) {
           chButton('roll', 'dice/rollbutton.jpg');
         }
+      }
 
-        //check for held dice
-        let snd = new Audio("dice/dicesound4.mp3");
-
-        for (let a = 0; a < document.user.box.length; a++) {
-          if (document.user.box[a].checked == false) {
-            pos[a] = document.user.box[a].value;
-          }
-
-          else {
-            if (document.user.box[a].checked == true) {
-              pos[a] = "skip";
-            }
-          }
-        }
-
-        for (let i = 0; i < pos.length; i++) {
-          let n = eval('document' + '.' + pos[i]);
-          if (pos[i] == "skip") { }
-
-          //if not held roll dice
-          else {
-            let d = ranNum();
-            score[i] = (d + 1);
-            pausecomp(0);
-            n.src = dice[d].src;
-            //snd.play();
-          }
+      for (let i = 0; i < 6; i++) {
+        if (!heldDice[i]) { // Если кубик не зафиксирован
+          let diceName = ['one', 'two', 'three', 'four', 'five', 'six'][i];
+          let d = ranNum();
+          score[i] = d + 1; // Сохраняем значение кубика (1-6)
+          document.getElementsByName(diceName)[0].src = dice[d].src;
         }
       }
     }
 
     //clear dice for next roll
     function clearDice() {
-      let n = new Array("one", "two", "three", "four", "five", "six");
-      for (let i = 0; i < n.length; i++) {
-        let p = eval('document' + '.' + n[i]);
-
-        p.src = "dice/dice.jpg";
-        delete ck[i];
-
+      for (let i = 0; i < 6; i++) {
+        let diceName = ['one', 'two', 'three', 'four', 'five', 'six'][i];
+        let diceElement = document.getElementsByName(diceName)[0];
+        diceElement.src = "dice/dice.jpg";
+        heldDice[i] = false;
+        diceElement.classList.remove('dice-held');
       }
-      ckFrmState();
+      document.getElementById('counter').textContent = '0';
+      x = 0;
     }
 
     //clear all values for new game
@@ -488,90 +490,44 @@
     }
 
     function georgeroll() {
-
-      if ($('#one').is(":not(:checked)")) {
-        $("#bouncy1").click();
-      }
-
-      if ($('#two').is(":not(:checked)")) {
-        $("#bouncy2").click();
-      }
-
-      if ($('#three').is(":not(:checked)")) {
-        $("#bouncy3").click();
-      }
-
-      if ($('#four').is(":not(:checked)")) {
-        $("#bouncy4").click();
-      }
-
-
-      if ($('#five').is(":not(:checked)")) {
-        $("#bouncy5").click();
-      }
-
-      if ($('#six').is(":not(:checked)")) {
-        $("#bouncy6").click();
-      }
-
       roll();
     }
 
     $(function () {
-      //Add bounce effect on Click of the DIV
       $('#bouncy1').click(function () {
+        toggleHold(0);
         $(this).effect("bounce", { direction: 'up', distance: 80, times: 2 }, 195);
       });
 
       $('#bouncy2').click(function () {
+        toggleHold(1);
         $(this).effect("bounce", { direction: 'up', distance: 80, times: 3 }, 200);
       });
 
       $('#bouncy3').click(function () {
+        toggleHold(2);
         $(this).effect("bounce", { direction: 'up', distance: 80, times: 2 }, 235);
       });
 
       $('#bouncy4').click(function () {
+        toggleHold(3);
         $(this).effect("bounce", { direction: 'up', distance: 80, times: 3 }, 155);
       });
 
       $('#bouncy5').click(function () {
+        toggleHold(4);
         $(this).effect("bounce", { direction: 'up', distance: 80, times: 2 }, 225);
       });
 
       $('#bouncy6').click(function () {
+        toggleHold(5);
         $(this).effect("bounce", { direction: 'up', distance: 80, times: 3 }, 170);
       });
 
-      //Bounce all DIVs on click of button
       $("#bounceAll").click(function () {
-        if ($('#one').is(":not(:checked)")) {
-          $("#bouncy1").click();
-        }
-
-        if ($('#two').is(":not(:checked)")) {
-          $("#bouncy2").click();
-        }
-
-        if ($('#three').is(":not(:checked)")) {
-          $("#bouncy3").click();
-        }
-
-        if ($('#four').is(":not(:checked)")) {
-          $("#bouncy4").click();
-        }
-
-        if ($('#five').is(":not(:checked)")) {
-          $("#bouncy5").click();
-        }
-
-        if ($('#six').is(":not(:checked)")) {
-          $("#bouncy6").click();
-        }
         roll();
       });
     });
-
   </script>
 
   <script language="Javascript">
@@ -592,11 +548,24 @@
         }
       }
       document.getElementById('counter').textContent = '';
+      const diceElements = [
+        document.getElementsByName('one')[0],
+        document.getElementsByName('two')[0],
+        document.getElementsByName('three')[0],
+        document.getElementsByName('four')[0],
+        document.getElementsByName('five')[0],
+        document.getElementsByName('six')[0]
+      ];
+
+      diceElements.forEach((dice, index) => {
+        dice.classList.remove('dice-held');
+        heldDice[index] = false;
+      });
     }
   </script>
   </HEAD>
 
-  <form name="user" method="post" action="#" onSubmit="return ValidateForm(this,'box')">
+  <form name="user">
 
     <div class="container text-center" style="background-color:#ffffff; max-width:825px">
       <div class="row no-gutters">
@@ -607,101 +576,48 @@
         <div class="col-2">
 
           <div id="bouncy1">
-            <img name="one" src="dice/dice1-1.jpg" width="133" height="116" class="img-fluid" alt="Dice 1">
+            <img name="one" src="dice/dice1-1.jpg" width="133" height="116" class="img-fluid dice-img" alt="Dice 1">
           </div>
         </div>
 
         <div class="col-2">
 
           <div id="bouncy2">
-            <img name="two" src="dice/dice2-1.jpg" width="133" height="116" class="img-fluid" alt="Dice 2">
+            <img name="two" src="dice/dice2-1.jpg" width="133" height="116" class="img-fluid dice-img" alt="Dice 2">
           </div>
         </div>
 
         <div class="col-2">
 
           <div id="bouncy3">
-            <img name="three" src="dice/dice3-1.jpg" width="133" height="116" class="img-fluid" alt="Dice 3">
+            <img name="three" src="dice/dice3-1.jpg" width="133" height="116" class="img-fluid dice-img" alt="Dice 3">
           </div>
         </div>
 
         <div class="col-2">
 
           <div id="bouncy4">
-            <img name="four" src="dice/dice4-1.jpg" width="133" height="116" class="img-fluid" alt="Dice 4">
+            <img name="four" src="dice/dice4-1.jpg" width="133" height="116" class="img-fluid dice-img" alt="Dice 4">
           </div>
         </div>
 
         <div class="col-2">
 
           <div id="bouncy5">
-            <img name="five" src="dice/dice5-1.jpg" width="133" height="116" class="img-fluid" alt="Dice 5">
+            <img name="five" src="dice/dice5-1.jpg" width="133" height="116" class="img-fluid dice-img" alt="Dice 5">
           </div>
         </div>
         <div class="col-1">
-        </div>
-      </div>
-    </div>
-    </div>
-
-    <div class="container text-center" style="background-color:#ffffff; max-width:825px">
-      <div class="row  no-gutters">
-
-        <div class="col-1">
-        </div>
-
-        <div class="col-2">
-          <div>
-            <input type="checkbox" name="box" value="one" id="one">
+          <div class="container text-center" style="background-color:#ffffff; max-width:825px">
+            <div class="row  no-gutters">
+              <div class="col-1">
+              </div>
+             <div class="col-1">
+                <div style="color:red" id="counter"></div>
+              </div>
+            </div>
           </div>
-
-          <div>
-            <label for="one">HOLD</label>
           </div>
-        </div>
-
-        <div class="col-2">
-          <div>
-            <input type="checkbox" name="box" value="two" id="two">
-          </div>
-
-          <div>
-            <label for="two">HOLD</label>
-          </div>
-        </div>
-
-        <div class="col-2">
-          <div>
-            <input type="checkbox" name="box" value="three" id="three">
-          </div>
-
-          <div>
-            <label for="three">HOLD</label>
-          </div>
-        </div>
-
-        <div class="col-2">
-          <div>
-            <input type="checkbox" name="box" value="four" id="four">
-          </div>
-
-          <div>
-            <label for="four">HOLD</label>
-          </div>
-        </div>
-
-        <div class="col-2">
-          <div>
-            <input type="checkbox" name="box" value="five" id="five">
-          </div>
-
-          <div>
-            <label for="five">HOLD</label>
-          </div>
-        </div>
-
-        <div class="col-1">
-          <div style="color:red" id="counter"></div>
         </div>
       </div>
     </div>
@@ -723,8 +639,7 @@
       <div class="row">
         <div class="col-sm-12">
           <a href="javascript:georgeroll()">
-            <img src="dice/rollbutton.jpg" name="roll" border=0 width="200" height="53" class="img-fluid"
-              alt="Roll Dice">
+            <img src="dice/rollbutton.jpg" name="roll" border=0 width="200" height="53" class="img-fluid dice-img" alt="Roll Dice">
           </a>
         </div>
       </div>
