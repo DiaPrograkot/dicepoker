@@ -462,13 +462,26 @@ function SetChecked(val, chkName) {
 }
 
 function getDiceValues() {
-    return score.slice(0, 5).map(index => {
-        if (index >= 0 && index < 17) return 1;   // dice1-* (17 картинок)
-        if (index >= 17 && index < 32) return 2;  // dice2-* (15 картинок)
-        if (index >= 32 && index < 46) return 3;  // dice3-* (14 картинок)
-        if (index >= 46 && index < 62) return 4;  // dice4-* (16 картинок)
-        if (index >= 62 && index < 78) return 5;  // dice5-* (16 картинок)
-        if (index >= 78 && index < 94) return 6;  // dice6-* (16 картинок)
+    // Сначала получаем текущие изображения кубиков
+    const diceElements = [
+        document.getElementsByName('one')[0],
+        document.getElementsByName('two')[0],
+        document.getElementsByName('three')[0],
+        document.getElementsByName('four')[0],
+        document.getElementsByName('five')[0]
+    ];
+    // Для каждого кубика извлекаем его значение из имени файла изображения
+    return diceElements.map(dice => {
+        const src = dice.src;
+        // Извлекаем имя файла из пути
+        const filename = src.split('/').pop();      
+        // Проверяем имя файла и возвращаем соответствующее значение
+        if (filename.startsWith('dice1-')) return 1;
+        if (filename.startsWith('dice2-')) return 2;
+        if (filename.startsWith('dice3-')) return 3;
+        if (filename.startsWith('dice4-')) return 4;
+        if (filename.startsWith('dice5-')) return 5;
+        if (filename.startsWith('dice6-')) return 6;
     });
 }
 
@@ -510,50 +523,67 @@ function checkCombinations() {
     for (const [value, count] of Object.entries(counts)) {
         if (count >= 3) {
             const row = value - 1;
-            highlightCell(row, currentPlayer, '#ffff80');
+            if (!isCellFilled(row, currentPlayer)) {
+                highlightCell(row, currentPlayer, '#ffff80');
+            }
         }
     }
 
     // 1 Pair
-    if (pairs >= 1) {
+    if (pairs >= 1 && !isCellFilled(COMBINATIONS.ONE_PAIR, currentPlayer)) {
         highlightCell(COMBINATIONS.ONE_PAIR, currentPlayer, '#ffff80');
     }
     
     // 2 Pairs
-    if (pairs >= 2) {
+    if (pairs >= 2 && !isCellFilled(COMBINATIONS.TWO_PAIRS, currentPlayer)) {
         highlightCell(COMBINATIONS.TWO_PAIRS, currentPlayer, '#ffff80');
     }
     
     // Triangle (3 одинаковых)
-    if (hasThree) {
+    if (hasThree && !isCellFilled(COMBINATIONS.TRIANGLE, currentPlayer)) {
         highlightCell(COMBINATIONS.TRIANGLE, currentPlayer, '#ffff80');
     }
     
     // Square (4 одинаковых)
-    if (hasFour) {
+    if (hasFour && !isCellFilled(COMBINATIONS.SQUARE, currentPlayer)) {
         highlightCell(COMBINATIONS.SQUARE, currentPlayer, '#ffff80');
     }
     
     // Ladder (последовательность)
     const sorted = [...values].sort((a, b) => a - b);
     const isLadder = sorted.every((v, i) => i === 0 || v === sorted[i-1] + 1);
-    if (isLadder) {
+    if (isLadder && !isCellFilled(COMBINATIONS.LADDER, currentPlayer)) {
         highlightCell(COMBINATIONS.LADDER, currentPlayer, '#ffff80');
     }
     
-    // Sum (всегда доступна)
-    highlightCell(COMBINATIONS.SUM, currentPlayer, '#ffff80');
+    // Sum (всегда доступна, но проверяем заполненность)
+    if (!isCellFilled(COMBINATIONS.SUM, currentPlayer)) {
+        highlightCell(COMBINATIONS.SUM, currentPlayer, '#ffff80');
+    }
     
     // Fux (full house - 3+2)
     const hasFullHouse = Object.values(counts).includes(3) && Object.values(counts).includes(2);
-    if (hasFullHouse) {
+    if (hasFullHouse && !isCellFilled(COMBINATIONS.FUX, currentPlayer)) {
         highlightCell(COMBINATIONS.FUX, currentPlayer, '#ffff80');
     }
     
     // Poker (5 одинаковых)
-    if (hasFive) {
+    if (hasFive && !isCellFilled(COMBINATIONS.POKER, currentPlayer)) {
         highlightCell(COMBINATIONS.POKER, currentPlayer, '#ffff80');
     }
+}
+
+// Новая функция для проверки, заполнена ли ячейка
+function isCellFilled(row, player) {
+    if (row === 6 || row === 15) { // Это итоговые ячейки (School Total и Grand Total)
+        return false; // Всегда позволяем их подсвечивать
+    }
+    
+    const cell = document.getElementById(`cell_${row}_${player}`);
+    if (!cell) return false;
+    
+    // Проверяем, есть ли значение в ячейке
+    return cell.value !== '' && cell.value !== undefined && cell.value !== null;
 }
 
 // Функция для сброса подсветок
