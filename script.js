@@ -458,3 +458,14 @@ function SetChecked(val, chkName) {
         heldDice[index] = false;
     });
 }
+
+function getDiceValues() {
+    return score.slice(0, 5).map(index => {
+        if (index >= 0 && index < 17) return 1;   // dice1-* (17 картинок)
+        if (index >= 17 && index < 32) return 2;  // dice2-* (15 картинок)
+        if (index >= 32 && index < 46) return 3;  // dice3-* (14 картинок)
+        if (index >= 46 && index < 62) return 4;  // dice4-* (16 картинок)
+        if (index >= 62 && index < 78) return 5;  // dice5-* (16 картинок)
+        if (index >= 78 && index < 94) return 6;  // dice6-* (16 картинок)
+    });
+}
