@@ -33,11 +33,15 @@ function toggleHold(diceIndex) {
 }
 
 function generateTable() {
-    //const numPlayers = Math.max(1, parseInt(document.getElementById('numPlayers').value) || 1);
     numPlayers = Math.max(1, parseInt(document.getElementById('numPlayers').value) || 1);
     let html = `<table><tr><td bgcolor="#f0f0f0">Category</td>`;
     for (let p = 0; p < numPlayers; ++p) {
-        html += `<th style="cursor:pointer" onclick="updateBgColors(` + p + `)"><input type="text" value="Player ${p + 1}" id="playerName_${p}" oninput="updatePlayerName(${p})"></th>`;
+        html += `<th style="cursor:pointer" onclick="updateBgColors(` + p + `)">
+            <div class="player-timer" id="timer_${p}">00:00</div>
+            <div class="player-name-container" onclick="event.stopPropagation()">
+                <input type="text" value="Player ${p + 1}" id="playerName_${p}" oninput="updatePlayerName(${p})">
+            </div>
+         </th>`;
     }
     html += `</tr>`;
     for (let r = 0; r < ROWS.length; ++r) {
@@ -53,6 +57,7 @@ function generateTable() {
     }
     html += `</table>`;
     document.getElementById('gameContainer').innerHTML = html;
+    initTimers();
 }
 
 function onInput(row, player) {
@@ -107,6 +112,7 @@ function updateBgColors(player) {
         }
     }
     SetChecked(0, 'box');
+    startCurrentPlayerTimer();
 }
 
 function updatePlayerName(player) {
@@ -367,7 +373,7 @@ function roll() {
             document.getElementsByName(diceName)[0].src = dice[d].src;
         }
     }
-    
+
     if (cnt > 0) checkCombinations();
 }
 
@@ -474,7 +480,7 @@ function getDiceValues() {
     return diceElements.map(dice => {
         const src = dice.src;
         // Извлекаем имя файла из пути
-        const filename = src.split('/').pop();      
+        const filename = src.split('/').pop();
         // Проверяем имя файла и возвращаем соответствующее значение
         if (filename.startsWith('dice1-')) return 1;
         if (filename.startsWith('dice2-')) return 2;
@@ -487,38 +493,38 @@ function getDiceValues() {
 
 // Добавляем в начало файла
 const COMBINATIONS = {
-  ONES: 0,
-  TWOS: 1,
-  THREES: 2,
-  FOURS: 3,
-  FIVES: 4,
-  SIXES: 5,
-  ONE_PAIR: 7,
-  TWO_PAIRS: 8,
-  TRIANGLE: 9,
-  SQUARE: 10,
-  LADDER: 11,
-  SUM: 12,
-  FUX: 13,
-  POKER: 14
+    ONES: 0,
+    TWOS: 1,
+    THREES: 2,
+    FOURS: 3,
+    FIVES: 4,
+    SIXES: 5,
+    ONE_PAIR: 7,
+    TWO_PAIRS: 8,
+    TRIANGLE: 9,
+    SQUARE: 10,
+    LADDER: 11,
+    SUM: 12,
+    FUX: 13,
+    POKER: 14
 };
 
 // Обновляем функцию checkCombinations()
 function checkCombinations() {
     resetHighlights();
-    
+
     const values = getDiceValues();
     const counts = {};
-    
+
     values.forEach(v => {
         counts[v] = (counts[v] || 0) + 1;
     });
-    
+
     const pairs = Object.values(counts).filter(v => v >= 2).length;
     const hasThree = Object.values(counts).some(v => v >= 3);
     const hasFour = Object.values(counts).some(v => v >= 4);
     const hasFive = Object.values(counts).some(v => v >= 5);
-    
+
     // Проверяем комбинации "школы" (1-6)
     for (const [value, count] of Object.entries(counts)) {
         if (count >= 3) {
@@ -533,40 +539,40 @@ function checkCombinations() {
     if (pairs >= 1 && !isCellFilled(COMBINATIONS.ONE_PAIR, currentPlayer)) {
         highlightCell(COMBINATIONS.ONE_PAIR, currentPlayer, '#ffff80');
     }
-    
+
     // 2 Pairs
     if (pairs >= 2 && !isCellFilled(COMBINATIONS.TWO_PAIRS, currentPlayer)) {
         highlightCell(COMBINATIONS.TWO_PAIRS, currentPlayer, '#ffff80');
     }
-    
+
     // Triangle (3 одинаковых)
     if (hasThree && !isCellFilled(COMBINATIONS.TRIANGLE, currentPlayer)) {
         highlightCell(COMBINATIONS.TRIANGLE, currentPlayer, '#ffff80');
     }
-    
+
     // Square (4 одинаковых)
     if (hasFour && !isCellFilled(COMBINATIONS.SQUARE, currentPlayer)) {
         highlightCell(COMBINATIONS.SQUARE, currentPlayer, '#ffff80');
     }
-    
+
     // Ladder (последовательность)
     const sorted = [...values].sort((a, b) => a - b);
-    const isLadder = sorted.every((v, i) => i === 0 || v === sorted[i-1] + 1);
+    const isLadder = sorted.every((v, i) => i === 0 || v === sorted[i - 1] + 1);
     if (isLadder && !isCellFilled(COMBINATIONS.LADDER, currentPlayer)) {
         highlightCell(COMBINATIONS.LADDER, currentPlayer, '#ffff80');
     }
-    
+
     // Sum (всегда доступна, но проверяем заполненность)
     if (!isCellFilled(COMBINATIONS.SUM, currentPlayer)) {
         highlightCell(COMBINATIONS.SUM, currentPlayer, '#ffff80');
     }
-    
+
     // Fux (full house - 3+2)
     const hasFullHouse = Object.values(counts).includes(3) && Object.values(counts).includes(2);
     if (hasFullHouse && !isCellFilled(COMBINATIONS.FUX, currentPlayer)) {
         highlightCell(COMBINATIONS.FUX, currentPlayer, '#ffff80');
     }
-    
+
     // Poker (5 одинаковых)
     if (hasFive && !isCellFilled(COMBINATIONS.POKER, currentPlayer)) {
         highlightCell(COMBINATIONS.POKER, currentPlayer, '#ffff80');
@@ -578,10 +584,10 @@ function isCellFilled(row, player) {
     if (row === 6 || row === 15) { // Это итоговые ячейки (School Total и Grand Total)
         return false; // Всегда позволяем их подсвечивать
     }
-    
+
     const cell = document.getElementById(`cell_${row}_${player}`);
     if (!cell) return false;
-    
+
     // Проверяем, есть ли значение в ячейке
     return cell.value !== '' && cell.value !== undefined && cell.value !== null;
 }
@@ -603,5 +609,54 @@ function highlightCell(row, player, color) {
     const cell = document.getElementById(`bgcell_${row}_${player}`);
     if (cell) {
         cell.style.backgroundColor = color;
+    }
+}
+
+let timers = [];
+let timerIntervals = [];
+let startTime;
+
+// Инициализация таймеров
+function initTimers() {
+    for (let i = 0; i < numPlayers; i++) {
+        timers[i] = 0;
+        document.getElementById(`timer_${i}`).textContent = '00:00';
+        document.getElementById(`timer_${i}`).classList.remove('active-timer');
+    }
+}
+
+// Обновление таймера
+function updateTimer(player) {
+    const minutes = Math.floor(timers[player] / 60);
+    const seconds = timers[player] % 60;
+    document.getElementById(`timer_${player}`).textContent =
+        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+
+// Запуск таймера для текущего игрока
+function startCurrentPlayerTimer() {
+    // Остановить все таймеры
+    stopAllTimers();
+    // Снять выделение со всех таймеров
+    for (let i = 0; i < numPlayers; i++) {
+        document.getElementById(`timer_${i}`).classList.remove('active-timer');
+    }
+    // Запустить таймер текущего игрока
+    startTime = Date.now();
+    timerIntervals[currentPlayer] = setInterval(() => {
+        timers[currentPlayer] = Math.floor((Date.now() - startTime) / 1000) + timers[currentPlayer];
+        startTime = Date.now();
+        updateTimer(currentPlayer);
+    }, 1000);
+    // Выделить таймер текущего игрока
+    document.getElementById(`timer_${currentPlayer}`).classList.add('active-timer');
+}
+
+// Остановить все таймеры
+function stopAllTimers() {
+    for (let i = 0; i < timerIntervals.length; i++) {
+        if (timerIntervals[i]) {
+            clearInterval(timerIntervals[i]);
+        }
     }
 }

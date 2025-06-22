@@ -61,3 +61,21 @@ input[type="text"]:focus {
   cursor: pointer;
   transition: all 0.3s;
 }
+
+.player-timer {
+  font-size: 0.8em;
+  color: #333;
+  margin: 4px 0;
+  font-weight: bold;
+}
+
+.active-timer {
+  color: red;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
