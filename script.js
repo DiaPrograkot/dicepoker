@@ -1,4 +1,5 @@
 let numPlayers = 0;
+let currentPlayer = 0;
 let heldDice = [false, false, false, false, false];
 const ROWS = [
     { label: "1", color: "#fff0f0", editable: true, group: "school" },
@@ -96,6 +97,7 @@ function updateTotals(player) {
 
 
 function updateBgColors(player) {
+    currentPlayer = player;
     for (let i = 0; i <= 14; ++i) {
         for (let p = 0; p < numPlayers; p++) {
             document.getElementById(`bgcell_${i}_${p - 0}`).style = "border:1px #bbb solid";
@@ -103,8 +105,6 @@ function updateBgColors(player) {
         if (i != 6) {
             document.getElementById(`bgcell_${i}_${player - 0}`).style = "border:1px double red";
         }
-        //document.getElementById(`bgcell_${i}_${player-1}`).style.backgroundColor="#d0d0d0";
-        //console.log(document.getElementById(`bgcell_${i}_${player-1}`).style);
     }
     SetChecked(0, 'box');
 }
@@ -353,7 +353,6 @@ function roll() {
         alert("Please Select New Game.");
         chButton('roll', 'dice/rollbutton.jpg');
     }
-
     else {
         if (x == 1) {
             chButton('roll', 'dice/rollbutton.jpg');
@@ -361,13 +360,15 @@ function roll() {
     }
 
     for (let i = 0; i < 5; i++) {
-        if (!heldDice[i]) { // Если кубик не зафиксирован
+        if (!heldDice[i]) {
             let diceName = ['one', 'two', 'three', 'four', 'five'][i];
             let d = ranNum();
-            score[i] = d + 1; // Сохраняем значение кубика (1-6)
+            score[i] = d + 1;
             document.getElementsByName(diceName)[0].src = dice[d].src;
         }
     }
+    
+    if (cnt > 0) checkCombinations();
 }
 
 //clear dice for next roll
@@ -436,6 +437,7 @@ $(function () {
 let form = 'user' //Give the form name here
 
 function SetChecked(val, chkName) {
+    resetHighlights()
     dml = document.forms[form];
     len = dml.elements.length;
     let w = 0;
@@ -468,4 +470,108 @@ function getDiceValues() {
         if (index >= 62 && index < 78) return 5;  // dice5-* (16 картинок)
         if (index >= 78 && index < 94) return 6;  // dice6-* (16 картинок)
     });
+}
+
+// Добавляем в начало файла
+const COMBINATIONS = {
+  ONES: 0,
+  TWOS: 1,
+  THREES: 2,
+  FOURS: 3,
+  FIVES: 4,
+  SIXES: 5,
+  ONE_PAIR: 7,
+  TWO_PAIRS: 8,
+  TRIANGLE: 9,
+  SQUARE: 10,
+  LADDER: 11,
+  SUM: 12,
+  FUX: 13,
+  POKER: 14
+};
+
+// Обновляем функцию checkCombinations()
+function checkCombinations() {
+    resetHighlights();
+    
+    const values = getDiceValues();
+    const counts = {};
+    
+    values.forEach(v => {
+        counts[v] = (counts[v] || 0) + 1;
+    });
+    
+    const pairs = Object.values(counts).filter(v => v >= 2).length;
+    const hasThree = Object.values(counts).some(v => v >= 3);
+    const hasFour = Object.values(counts).some(v => v >= 4);
+    const hasFive = Object.values(counts).some(v => v >= 5);
+    
+    // Проверяем комбинации "школы" (1-6)
+    for (const [value, count] of Object.entries(counts)) {
+        if (count >= 3) {
+            const row = value - 1;
+            highlightCell(row, currentPlayer, '#ffff80');
+        }
+    }
+
+    // 1 Pair
+    if (pairs >= 1) {
+        highlightCell(COMBINATIONS.ONE_PAIR, currentPlayer, '#ffff80');
+    }
+    
+    // 2 Pairs
+    if (pairs >= 2) {
+        highlightCell(COMBINATIONS.TWO_PAIRS, currentPlayer, '#ffff80');
+    }
+    
+    // Triangle (3 одинаковых)
+    if (hasThree) {
+        highlightCell(COMBINATIONS.TRIANGLE, currentPlayer, '#ffff80');
+    }
+    
+    // Square (4 одинаковых)
+    if (hasFour) {
+        highlightCell(COMBINATIONS.SQUARE, currentPlayer, '#ffff80');
+    }
+    
+    // Ladder (последовательность)
+    const sorted = [...values].sort((a, b) => a - b);
+    const isLadder = sorted.every((v, i) => i === 0 || v === sorted[i-1] + 1);
+    if (isLadder) {
+        highlightCell(COMBINATIONS.LADDER, currentPlayer, '#ffff80');
+    }
+    
+    // Sum (всегда доступна)
+    highlightCell(COMBINATIONS.SUM, currentPlayer, '#ffff80');
+    
+    // Fux (full house - 3+2)
+    const hasFullHouse = Object.values(counts).includes(3) && Object.values(counts).includes(2);
+    if (hasFullHouse) {
+        highlightCell(COMBINATIONS.FUX, currentPlayer, '#ffff80');
+    }
+    
+    // Poker (5 одинаковых)
+    if (hasFive) {
+        highlightCell(COMBINATIONS.POKER, currentPlayer, '#ffff80');
+    }
+}
+
+// Функция для сброса подсветок
+function resetHighlights() {
+    for (let r = 0; r < ROWS.length; r++) {
+        for (let p = 0; p < numPlayers; p++) {
+            const cell = document.getElementById(`bgcell_${r}_${p}`);
+            if (cell) {
+                cell.style.backgroundColor = ROWS[r].color;
+            }
+        }
+    }
+}
+
+// Функция для подсветки ячейки
+function highlightCell(row, player, color) {
+    const cell = document.getElementById(`bgcell_${row}_${player}`);
+    if (cell) {
+        cell.style.backgroundColor = color;
+    }
 }
