@@ -136,10 +136,10 @@
 
       let schoolTotalCell = document.getElementById(`bgcell_6_${player}`);
       console.log(schoolTotalCell, player, schoolFilled);
-      schoolTotalCell.textContent = schoolFilled ? schoolSum*10 : '';
+      schoolTotalCell.textContent = schoolFilled ? schoolSum * 10 : '';
 
       // Grand Total: schoolTotal + rows 7-14
-      let grandFilled = schoolFilled, grandSum = schoolSum*10;
+      let grandFilled = schoolFilled, grandSum = schoolSum * 10;
       for (let i = 7; i <= 14; ++i) {
         let v = parseInt(document.getElementById(`cell_${i}_${player}`).value);
         if (document.getElementById(`cell_${i}_${player}`).value === 'x') {
@@ -154,6 +154,8 @@
 
 
     function updateBgColors(player) {
+      SetChecked(0, 'box');
+
       for (let i = 0; i <= 14; ++i) {
         for (let p = 0; p < numPlayers; p++) {
           document.getElementById(`bgcell_${i}_${p - 0}`).style = "border:1px #bbb solid";
