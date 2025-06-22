@@ -82,7 +82,7 @@
 
   <script>
     let numPlayers = 0;
-    let heldDice = [false, false, false, false, false, false];
+    let heldDice = [false, false, false, false, false];
     const ROWS = [
       { label: "1", color: "#fff0f0", editable: true, group: "school" },
       { label: "2", color: "#fff0f0", editable: true, group: "school" },
@@ -105,7 +105,7 @@
     // Для обработки кликов по кубикам
     function toggleHold(diceIndex) {
       heldDice[diceIndex] = !heldDice[diceIndex];
-      const diceElement = document.getElementsByName(['one', 'two', 'three', 'four', 'five', 'six'][diceIndex])[0];
+      const diceElement = document.getElementsByName(['one', 'two', 'three', 'four', 'five'][diceIndex])[0];
 
       if (heldDice[diceIndex]) {
         diceElement.classList.add('dice-held');
@@ -455,20 +455,20 @@
         }
       }
 
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 5; i++) {
         if (!heldDice[i]) { // Если кубик не зафиксирован
-          let diceName = ['one', 'two', 'three', 'four', 'five', 'six'][i];
+          let diceName = ['one', 'two', 'three', 'four', 'five'][i];
           let d = ranNum();
           score[i] = d + 1; // Сохраняем значение кубика (1-6)
           document.getElementsByName(diceName)[0].src = dice[d].src;
         }
       }
     }
-
+    
     //clear dice for next roll
     function clearDice() {
-      for (let i = 0; i < 6; i++) {
-        let diceName = ['one', 'two', 'three', 'four', 'five', 'six'][i];
+      for (let i = 0; i < 5; i++) {
+        let diceName = ['one', 'two', 'three', 'four', 'five'][i];
         let diceElement = document.getElementsByName(diceName)[0];
         diceElement.src = "dice/dice.jpg";
         heldDice[i] = false;
@@ -554,7 +554,6 @@
         document.getElementsByName('three')[0],
         document.getElementsByName('four')[0],
         document.getElementsByName('five')[0],
-        document.getElementsByName('six')[0]
       ];
 
       diceElements.forEach((dice, index) => {
