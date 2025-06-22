@@ -1,0 +1,63 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 30px auto;
+  background: #fff;
+  box-shadow: 0 2px 8px #ccc;
+  text-align: center;
+}
+
+th,
+td {
+  border: 1px solid #bbb;
+  padding: 4px 8px;
+  text-align: center;
+  min-width: 50px;
+}
+
+th {
+  background: #f0f0f0;
+  width: 120px;
+}
+
+input[type="text"] {
+  width: 90%;
+  text-align: center;
+  border: none;
+  background: #f9f9f9;
+}
+
+input[type="text"]:focus {
+  background: #e0f7fa;
+  outline: 1px solid #26c6da;
+}
+
+.btn {
+  margin: 20px;
+  padding: 8px 16px;
+  font-size: 1rem;
+}
+
+.readonly {
+  background: #f0f0f0;
+  font-weight: bold;
+}
+
+#gameContainer {
+  line-height: 1;
+}
+
+.dice-held {
+  opacity: 0.6;
+  border: 2px solid red;
+  border-radius: 10px;
+}
+
+.dice-img {
+  cursor: pointer;
+  transition: all 0.3s;
+}

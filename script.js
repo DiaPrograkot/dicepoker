@@ -1,0 +1,460 @@
+let numPlayers = 0;
+let heldDice = [false, false, false, false, false];
+const ROWS = [
+    { label: "1", color: "#fff0f0", editable: true, group: "school" },
+    { label: "2", color: "#fff0f0", editable: true, group: "school" },
+    { label: "3", color: "#fff0f0", editable: true, group: "school" },
+    { label: "4", color: "#fff0f0", editable: true, group: "school" },
+    { label: "5", color: "#fff0f0", editable: true, group: "school" },
+    { label: "6", color: "#fff0f0", editable: true, group: "school" },
+    { label: "School Total", color: "#fff0f0", editable: false, group: "schoolTotal" },
+    { label: "1 Pair", color: "#fffff0", editable: true },
+    { label: "2 Pairs", color: "#fffff0", editable: true },
+    { label: "Triangle", color: "#fffff0", editable: true },
+    { label: "Square", color: "#fffff0", editable: true },
+    { label: "Ladder", color: "#f0f0ff", editable: true },
+    { label: "Sum", color: "#f0f0ff", editable: true },
+    { label: "Fux", color: "#f0f0ff", editable: true },
+    { label: "Poker", color: "#f0f0ff", editable: true },
+    { label: "Grand Total", color: "#f0fff0", editable: false, group: "grandTotal" }
+];
+
+// Для обработки кликов по кубикам
+function toggleHold(diceIndex) {
+    heldDice[diceIndex] = !heldDice[diceIndex];
+    const diceElement = document.getElementsByName(['one', 'two', 'three', 'four', 'five'][diceIndex])[0];
+
+    if (heldDice[diceIndex]) {
+        diceElement.classList.add('dice-held');
+    } else {
+        diceElement.classList.remove('dice-held');
+    }
+}
+
+function generateTable() {
+    //const numPlayers = Math.max(1, parseInt(document.getElementById('numPlayers').value) || 1);
+    numPlayers = Math.max(1, parseInt(document.getElementById('numPlayers').value) || 1);
+    let html = `<table><tr><td bgcolor="#f0f0f0">Category</td>`;
+    for (let p = 0; p < numPlayers; ++p) {
+        html += `<th style="cursor:pointer" onclick="updateBgColors(` + p + `)"><input type="text" value="Player ${p + 1}" id="playerName_${p}" oninput="updatePlayerName(${p})"></th>`;
+    }
+    html += `</tr>`;
+    for (let r = 0; r < ROWS.length; ++r) {
+        html += `<tr ><td  bgcolor="` + ROWS[r].color + `">${ROWS[r].label}</td>`;
+        for (let p = 0; p < numPlayers; ++p) {
+            if (ROWS[r].editable) {
+                html += `<td id="bgcell_${r}_${p - 0}" bgcolor="` + ROWS[r].color + `"><input type="text" id="cell_${r}_${p}" oninput="onInput(${r},${p})"></td>`;
+            } else {
+                html += `<td id="bgcell_${r}_${p - 0}"bgcolor="` + ROWS[r].color + `" id="cell_${r}_${p}" class="readonly"></td>`;
+            }
+        }
+        html += `</tr>`;
+    }
+    html += `</table>`;
+    document.getElementById('gameContainer').innerHTML = html;
+}
+
+function onInput(row, player) {
+    // Validate input: non-numeric values become 0
+    const input = document.getElementById(`cell_${row}_${player}`);
+    let val = parseInt(input.value);
+    //if (isNaN(val)) val = 0;
+    // input.value = val ? val : 'x';
+    updateTotals(player);
+}
+
+function updateTotals(player) {
+    // School Total: rows 0-5
+    let schoolFilled = true, schoolSum = 0;
+    for (let i = 0; i < 6; ++i) {
+        let v = parseInt(document.getElementById(`cell_${i}_${player}`).value);
+        //console.log(`cell_${i}_${player}`);
+        if (document.getElementById(`cell_${i}_${player}`).value === '-') {
+            v = 0;
+        }
+        if (isNaN(v)) schoolFilled = false;
+        else schoolSum += v;
+    }
+
+    let schoolTotalCell = document.getElementById(`bgcell_6_${player}`);
+    console.log(schoolTotalCell, player, schoolFilled);
+    schoolTotalCell.textContent = schoolFilled ? schoolSum * 10 : '';
+
+    // Grand Total: schoolTotal + rows 7-14
+    let grandFilled = schoolFilled, grandSum = schoolSum * 10;
+    for (let i = 7; i <= 14; ++i) {
+        let v = parseInt(document.getElementById(`cell_${i}_${player}`).value);
+        if (document.getElementById(`cell_${i}_${player}`).value === 'x') {
+            v = 0;
+        }
+        if (isNaN(v)) grandFilled = false;
+        else grandSum += v;
+    }
+    let grandTotalCell = document.getElementById(`bgcell_15_${player}`);
+    grandTotalCell.textContent = grandFilled ? grandSum : '';
+}
+
+
+function updateBgColors(player) {
+    for (let i = 0; i <= 14; ++i) {
+        for (let p = 0; p < numPlayers; p++) {
+            document.getElementById(`bgcell_${i}_${p - 0}`).style = "border:1px #bbb solid";
+        }
+        if (i != 6) {
+            document.getElementById(`bgcell_${i}_${player - 0}`).style = "border:1px double red";
+        }
+        //document.getElementById(`bgcell_${i}_${player-1}`).style.backgroundColor="#d0d0d0";
+        //console.log(document.getElementById(`bgcell_${i}_${player-1}`).style);
+    }
+    SetChecked(0, 'box');
+}
+
+function updatePlayerName(player) {
+    // Optionally, could update the header, but input is already in header
+}
+// Auto-generate initial table
+window.onload = generateTable;
+
+        //load button images
+        let pic = new Array();
+        pic[0] = new Image();
+        pic[0].src = "dice/rollbutton.jpg";
+
+
+        //change button function
+        function chButton(name, source) {
+            let picture = eval('document' + '.' + name);
+            picture.src = source;
+        }
+
+        //set up letiables
+        let ck = new Array();
+        let count = 0;
+        let score = new Array();
+        let pos = new Array();
+        let x = 0;
+
+        let fld = new Array('ones', 'twos', 'threes', 'fours', 'fives', 'sixes');
+        let dice = new Array(94);
+
+        //load dice images
+        dice[0] = new Image();
+        dice[0].src = "dice/dice1-1.jpg";
+        dice[1] = new Image();
+        dice[1].src = "dice/dice1-2.jpg";
+        dice[2] = new Image();
+        dice[2].src = "dice/dice1-3.jpg";
+        dice[3] = new Image();
+        dice[3].src = "dice/dice1-4.jpg";
+        dice[4] = new Image();
+        dice[4].src = "dice/dice1-5.jpg";
+        dice[5] = new Image();
+        dice[5].src = "dice/dice1-6.jpg";
+        dice[6] = new Image();
+        dice[6].src = "dice/dice1-7.jpg";
+        dice[7] = new Image();
+        dice[7].src = "dice/dice1-8.jpg";
+        dice[8] = new Image();
+        dice[8].src = "dice/dice1-9.jpg";
+        dice[9] = new Image();
+        dice[9].src = "dice/dice1-10.jpg";
+        dice[10] = new Image();
+        dice[10].src = "dice/dice1-11.jpg";
+        dice[11] = new Image();
+        dice[11].src = "dice/dice1-12.jpg";
+        dice[12] = new Image();
+        dice[12].src = "dice/dice1-13.jpg";
+        dice[13] = new Image();
+        dice[13].src = "dice/dice1-14.jpg";
+        dice[14] = new Image();
+        dice[14].src = "dice/dice1-15.jpg";
+        dice[15] = new Image();
+        dice[15].src = "dice/dice1-16.jpg";
+        dice[16] = new Image();
+        dice[16].src = "dice/dice1-17.jpg";
+        dice[17] = new Image();
+        dice[17].src = "dice/dice2-1.jpg";
+        dice[18] = new Image();
+        dice[18].src = "dice/dice2-2.jpg";
+        dice[19] = new Image();
+        dice[19].src = "dice/dice2-3.jpg";
+        dice[20] = new Image();
+        dice[20].src = "dice/dice2-4.jpg";
+        dice[21] = new Image();
+        dice[21].src = "dice/dice2-5.jpg";
+        dice[22] = new Image();
+        dice[22].src = "dice/dice2-6.jpg";
+        dice[23] = new Image();
+        dice[23].src = "dice/dice2-7.jpg";
+        dice[24] = new Image();
+        dice[24].src = "dice/dice2-8.jpg";
+        dice[25] = new Image();
+        dice[25].src = "dice/dice2-9.jpg";
+        dice[26] = new Image();
+        dice[26].src = "dice/dice2-10.jpg";
+        dice[27] = new Image();
+        dice[27].src = "dice/dice2-11.jpg";
+        dice[28] = new Image();
+        dice[28].src = "dice/dice2-12.jpg";
+        dice[29] = new Image();
+        dice[29].src = "dice/dice2-13.jpg";
+        dice[30] = new Image();
+        dice[30].src = "dice/dice2-14.jpg";
+        dice[31] = new Image();
+        dice[31].src = "dice/dice2-15.jpg";
+        dice[32] = new Image();
+        dice[32].src = "dice/dice3-1.jpg";
+        dice[33] = new Image();
+        dice[33].src = "dice/dice3-2.jpg";
+        dice[34] = new Image();
+        dice[34].src = "dice/dice3-3.jpg";
+        dice[35] = new Image();
+        dice[35].src = "dice/dice3-4.jpg";
+        dice[36] = new Image();
+        dice[36].src = "dice/dice3-5.jpg";
+        dice[37] = new Image();
+        dice[37].src = "dice/dice3-6.jpg";
+        dice[38] = new Image();
+        dice[38].src = "dice/dice3-7.jpg";
+        dice[39] = new Image();
+        dice[39].src = "dice/dice3-8.jpg";
+        dice[40] = new Image();
+        dice[40].src = "dice/dice3-9.jpg";
+        dice[41] = new Image();
+        dice[41].src = "dice/dice3-10.jpg";
+        dice[42] = new Image();
+        dice[42].src = "dice/dice3-11.jpg";
+        dice[43] = new Image();
+        dice[43].src = "dice/dice3-12.jpg";
+        dice[44] = new Image();
+        dice[44].src = "dice/dice3-13.jpg";
+        dice[45] = new Image();
+        dice[45].src = "dice/dice3-14.jpg";
+        dice[46] = new Image();
+        dice[46].src = "dice/dice4-1.jpg";
+        dice[47] = new Image();
+        dice[47].src = "dice/dice4-2.jpg";
+        dice[48] = new Image();
+        dice[48].src = "dice/dice4-3.jpg";
+        dice[49] = new Image();
+        dice[49].src = "dice/dice4-4.jpg";
+        dice[50] = new Image();
+        dice[50].src = "dice/dice4-5.jpg";
+        dice[51] = new Image();
+        dice[51].src = "dice/dice4-6.jpg";
+        dice[52] = new Image();
+        dice[52].src = "dice/dice4-7.jpg";
+        dice[53] = new Image();
+        dice[53].src = "dice/dice4-8.jpg";
+        dice[54] = new Image();
+        dice[54].src = "dice/dice4-9.jpg";
+        dice[55] = new Image();
+        dice[55].src = "dice/dice4-10.jpg";
+        dice[56] = new Image();
+        dice[56].src = "dice/dice4-11.jpg";
+        dice[57] = new Image();
+        dice[57].src = "dice/dice4-12.jpg";
+        dice[58] = new Image();
+        dice[58].src = "dice/dice4-13.jpg";
+        dice[59] = new Image();
+        dice[59].src = "dice/dice4-14.jpg";
+        dice[60] = new Image();
+        dice[60].src = "dice/dice4-15.jpg";
+        dice[61] = new Image();
+        dice[61].src = "dice/dice4-16.jpg";
+        dice[62] = new Image();
+        dice[62].src = "dice/dice5-1.jpg";
+        dice[63] = new Image();
+        dice[63].src = "dice/dice5-2.jpg";
+        dice[64] = new Image();
+        dice[64].src = "dice/dice5-3.jpg";
+        dice[65] = new Image();
+        dice[65].src = "dice/dice5-4.jpg";
+        dice[66] = new Image();
+        dice[66].src = "dice/dice5-5.jpg";
+        dice[67] = new Image();
+        dice[67].src = "dice/dice5-6.jpg";
+        dice[68] = new Image();
+        dice[68].src = "dice/dice5-7.jpg";
+        dice[69] = new Image();
+        dice[69].src = "dice/dice5-8.jpg";
+        dice[70] = new Image();
+        dice[70].src = "dice/dice5-9.jpg";
+        dice[71] = new Image();
+        dice[71].src = "dice/dice5-10.jpg";
+        dice[72] = new Image();
+        dice[72].src = "dice/dice5-11.jpg";
+        dice[73] = new Image();
+        dice[73].src = "dice/dice5-12.jpg";
+        dice[74] = new Image();
+        dice[74].src = "dice/dice5-13.jpg";
+        dice[75] = new Image();
+        dice[75].src = "dice/dice5-14.jpg";
+        dice[76] = new Image();
+        dice[76].src = "dice/dice5-15.jpg";
+        dice[77] = new Image();
+        dice[77].src = "dice/dice6-1.jpg";
+        dice[78] = new Image();
+        dice[78].src = "dice/dice6-2.jpg";
+        dice[79] = new Image();
+        dice[79].src = "dice/dice6-3.jpg";
+        dice[80] = new Image();
+        dice[80].src = "dice/dice6-4.jpg";
+        dice[81] = new Image();
+        dice[81].src = "dice/dice6-5.jpg";
+        dice[82] = new Image();
+        dice[82].src = "dice/dice6-6.jpg";
+        dice[83] = new Image();
+        dice[83].src = "dice/dice6-7.jpg";
+        dice[84] = new Image();
+        dice[84].src = "dice/dice6-8.jpg";
+        dice[85] = new Image();
+        dice[85].src = "dice/dice6-9.jpg";
+        dice[86] = new Image();
+        dice[86].src = "dice/dice6-10.jpg";
+        dice[87] = new Image();
+        dice[87].src = "dice/dice6-11.jpg";
+        dice[88] = new Image();
+        dice[88].src = "dice/dice6-12.jpg";
+        dice[89] = new Image();
+        dice[89].src = "dice/dice6-13.jpg";
+        dice[90] = new Image();
+        dice[90].src = "dice/dice6-14.jpg";
+        dice[91] = new Image();
+        dice[91].src = "dice/dice6-15.jpg";
+        dice[92] = new Image();
+        dice[92].src = "dice/dice6-16.jpg";
+        dice[93] = new Image();
+        dice[93].src = "dice/dice6-17.jpg";
+
+        //random number generator 
+        function ranNum() {
+            for (let i = 0; i < dice.length; i++) {
+                let j = Math.floor(Math.random() * dice.length);
+                return j;
+            }
+        }
+
+        function pausecomp(millis) {
+            let date = new Date();
+            let curDate = null;
+            do { curDate = new Date(); }
+            while (curDate - date < millis);
+        }
+
+        function roll() {
+            let cnt = parseInt(document.getElementById('counter').textContent) || 0;
+            cnt++;
+            document.getElementById('counter').textContent = cnt;
+            x++;
+
+            if (x > 2000) {
+                chButton('roll', 'dice/rollbutton.jpg');
+                alert("Please Select New Game.");
+                chButton('roll', 'dice/rollbutton.jpg');
+            }
+
+            else {
+                if (x == 1) {
+                    chButton('roll', 'dice/rollbutton.jpg');
+                }
+            }
+
+            for (let i = 0; i < 5; i++) {
+                if (!heldDice[i]) { // Если кубик не зафиксирован
+                    let diceName = ['one', 'two', 'three', 'four', 'five'][i];
+                    let d = ranNum();
+                    score[i] = d + 1; // Сохраняем значение кубика (1-6)
+                    document.getElementsByName(diceName)[0].src = dice[d].src;
+                }
+            }
+        }
+
+        //clear dice for next roll
+        function clearDice() {
+            for (let i = 0; i < 5; i++) {
+                let diceName = ['one', 'two', 'three', 'four', 'five'][i];
+                let diceElement = document.getElementsByName(diceName)[0];
+                diceElement.src = "dice/dice.jpg";
+                heldDice[i] = false;
+                diceElement.classList.remove('dice-held');
+            }
+            document.getElementById('counter').textContent = '0';
+            x = 0;
+        }
+
+        //clear all values for new game
+        function newGame() {
+            ck.length = 0;
+
+            x = 0;
+            count = 0;
+            document.user.reset();
+
+        }
+
+        function georgeroll() {
+            roll();
+        }
+
+        $(function () {
+            $('#bouncy1').click(function () {
+                toggleHold(0);
+                $(this).effect("bounce", { direction: 'up', distance: 80, times: 2 }, 195);
+            });
+
+            $('#bouncy2').click(function () {
+                toggleHold(1);
+                $(this).effect("bounce", { direction: 'up', distance: 80, times: 3 }, 200);
+            });
+
+            $('#bouncy3').click(function () {
+                toggleHold(2);
+                $(this).effect("bounce", { direction: 'up', distance: 80, times: 2 }, 235);
+            });
+
+            $('#bouncy4').click(function () {
+                toggleHold(3);
+                $(this).effect("bounce", { direction: 'up', distance: 80, times: 3 }, 155);
+            });
+
+            $('#bouncy5').click(function () {
+                toggleHold(4);
+                $(this).effect("bounce", { direction: 'up', distance: 80, times: 2 }, 225);
+            });
+
+            $('#bouncy6').click(function () {
+                toggleHold(5);
+                $(this).effect("bounce", { direction: 'up', distance: 80, times: 3 }, 170);
+            });
+
+            $("#bounceAll").click(function () {
+                roll();
+            });
+        });
+
+        let form = 'user' //Give the form name here
+
+        function SetChecked(val, chkName) {
+            dml = document.forms[form];
+            len = dml.elements.length;
+            let w = 0;
+            for (w = 0; w < len; w++) {
+                if (dml.elements[w].name == chkName) {
+                    dml.elements[w].checked = val;
+                }
+            }
+            document.getElementById('counter').textContent = '';
+            const diceElements = [
+                document.getElementsByName('one')[0],
+                document.getElementsByName('two')[0],
+                document.getElementsByName('three')[0],
+                document.getElementsByName('four')[0],
+                document.getElementsByName('five')[0],
+            ];
+
+            diceElements.forEach((dice, index) => {
+                dice.classList.remove('dice-held');
+                heldDice[index] = false;
+            });
+        }
