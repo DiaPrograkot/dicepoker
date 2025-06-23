@@ -113,7 +113,7 @@ function updateBgColors(player) {
     }
     SetChecked(0, 'box');
     startCurrentPlayerTimer();
-    
+
     // Проверяем, была ли снята подсветка с последней ячейки
     if (areAllCellsFilled()) {
         applyTimePenalties();
@@ -687,7 +687,7 @@ function areAllCellsFilled() {
         for (let r = 0; r < ROWS.length; r++) {
             // Пропускаем итоговые ячейки (School Total и Grand Total)
             if (r === 6 || r === 15) continue;
-            
+
             const cell = document.getElementById(`cell_${r}_${p}`);
             if (!cell || cell.value === '' || cell.value === undefined || cell.value === null) {
                 return false;
@@ -706,33 +706,33 @@ function applyTimePenalties() {
             time: timers[i]
         });
     }
-    
+
     // Сортируем игроков по времени (от большего к меньшему)
     playersWithTimes.sort((a, b) => b.time - a.time);
-    
+
     // Получаем правила для текущего количества игроков
     const penalties = PENALTY_RULES[numPlayers] || [];
-    
+
     // Применяем штрафы
     for (let i = 0; i < penalties.length && i < playersWithTimes.length; i++) {
         const playerIndex = playersWithTimes[i].playerIndex;
         const penalty = penalties[i];
-        
+
         // Получаем текущий Grand Total
         const grandTotalCell = document.getElementById(`bgcell_15_${playerIndex}`);
         let currentTotal = parseInt(grandTotalCell.textContent) || 0;
-        
+
         // Применяем штраф
         currentTotal += penalty;
-        
+
         // Обновляем ячейку
         grandTotalCell.textContent = currentTotal;
-        
+
         // Добавляем визуальное обозначение штрафа
         grandTotalCell.style.color = 'red';
         grandTotalCell.innerHTML = `${currentTotal} <small>(${penalty})</small>`;
     }
-    
+
     // Останавливаем все таймеры, так как игра завершена
     stopAllTimers();
 }

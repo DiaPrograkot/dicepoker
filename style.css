@@ -11,8 +11,7 @@ table {
   text-align: center;
 }
 
-th,
-td {
+th, td {
   border: 1px solid #bbb;
   padding: 4px 8px;
   text-align: center;
@@ -80,7 +79,6 @@ input[type="text"]:focus {
   100% { opacity: 1; }
 }
 
-/* Добавим в конец файла */
 small {
     font-size: 0.7em;
     opacity: 0.8;
