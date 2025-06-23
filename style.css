@@ -1,10 +1,11 @@
 /* Основные стили */
 body.picnic-theme {
-  font-family: 'Comfortaa', cursive;
-  background: #e8f5e9;
-  background-image: url('forest-bg.jpg');
+  font-family: "Comfortaa", cursive;
+  background: linear-gradient(to bottom, #e8f5e9, #c8e6c9);
+  background-image: url("dice/bg.png");
   background-size: cover;
   background-attachment: fixed;
+  background-position: center;
   color: #2d6a4f;
   margin: 0;
   padding: 0;
@@ -12,192 +13,266 @@ body.picnic-theme {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 0.9em;
+  overflow: hidden;
 }
 
 .controls {
-  margin-top: 15px;
+color: #2d3e32;
+ margin-top: 7px;
+  background: #d1dbab;
+  padding: 7px;
+  border-radius: 13.5px;
+  box-shadow: 0 3.6px 13.5px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(4.5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Стили для таблицы */
+/* Обновленные стили для таблицы */
 table {
   border-collapse: collapse;
-  margin: 30px auto;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 18px;
+  background: rgba(240, 247, 218, 0.9); /* Светло-зеленый фон с прозрачностью */
+  box-shadow: 0 3.6px 18px rgba(0, 0, 0, 0.15);
   text-align: center;
-  border-radius: 10px;
+  border-radius: 10.8px;
   overflow: hidden;
-  border: 2px solid #a5d6a7;
-}
-
-th, td {
-  border: 1px solid #c8e6c9;
-  text-align: center;
-  min-width: 50px;
+  border: 2px solid #8b9a3c; /* Основной зеленый цвет */
 }
 
 th {
-  background: #a5d6a7;
-  color: white;
+  background: #8b9a3c; /* Основной зеленый цвет */
+  color: #f0f7da; /* Светло-кремовый текст */
   font-weight: bold;
-  width: 120px;
+  width: 108px;
+  padding: 9px 4.5px;
 }
 
+td {
+  border: 1px solid #d4e2d4; /* Светло-зеленая граница */
+  text-align: center;
+  min-width: 45px;
+}
+
+/* Обновленные стили для строк */
 input[type="text"] {
   width: 90%;
   text-align: center;
   border: none;
-  background: #f1f8e9;
-  border-radius: 4px;
-  padding: 5px;
-  font-family: 'Comfortaa', cursive;
-}
-
-input[type="text"]:focus {
-  background: #dcedc8;
-  outline: 2px solid #81c784;
+  background: rgba(255, 255, 255, 0.7); /* Белый с прозрачностью */
+  border-radius: 5.4px;
+  padding: 5.4px;
+  font-family: "Comfortaa", cursive;
+  color: #3a5a40; /* Темно-зеленый текст */
+  font-weight: bold;
+  border: 1px solid #d4e2d4; /* Светло-зеленая граница */
 }
 
 .readonly {
-  background: #e8f5e9;
+  background: rgba(210, 227, 188, 0.5); /* Светло-зеленый фон для неизменяемых ячеек */
   font-weight: bold;
+  color: #3a5a40; /* Темно-зеленый текст */
+}
+
+/* Обновленные цвета для строк таблицы */
+tr:nth-child(odd) td {
+  background-color: rgba(240, 247, 218, 0.7); /* Светло-зеленый фон для нечетных строк */
+}
+
+tr:nth-child(even) td {
+  background-color: rgba(255, 255, 255, 0.7); /* Белый фон для четных строк */
+}
+
+/* Стили для заголовков игроков */
+.player-name-container input {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #d4e2d4;
+  border-radius: 4px;
+  padding: 2px;
+  text-align: center;
+  color: #2d3e32;
+  font-weight: bold;
+}
+
+/* Общий стиль для всех специальных категорий */
+tr:nth-child(11) td,  /* Ladder */
+tr:nth-child(12) td,  /* Sum */
+tr:nth-child(13) td,  /* Fux */
+tr:nth-child(14) td { /* Poker */
+  background-color: rgba(212, 219, 171, 0.9) !important; /* Основной желто-зеленый цвет */
+  font-weight: bold;
+  color: #2d3e32; /* Темный текст */
+  position: relative;
 }
 
 /* Стили для кубиков */
 .dice-area {
   position: relative;
   width: 100%;
-  max-width: 900px;
+  max-width: 810px;
+  margin-top: 18px;
 }
 
 .picnic-table {
-  background-color: #d7ccc8;
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
-  border: 4px solid #8d6e63;
-  position: relative;
-  z-index: 2;
+    background-color: #5a5627;
+    border-radius: 18px;
+    padding: 22.5px;
+    box-shadow: inset 0 0 13.5px rgba(0, 0, 0, 0.1), 0 9px 22.5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 3;
 }
 
 .dice-container {
-  background-color: #efebe9;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  background-color: #f0f7da;
+  background-image: url("https://www.transparenttextures.com/patterns/light-paper-fibers.png");
+  border-radius: 10.8px;
+  padding: 10.8px;
+  box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.1),
+    inset 0 0 4.5px rgba(0, 0, 0, 0.05);
   transition: all 0.3s;
+  border: 1px solid #d4e2d4;
 }
 
 .dice-container:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4.5px);
+  box-shadow: 0 5.4px 10.8px rgba(0, 0, 0, 0.15);
 }
 
 .dice-held {
-  opacity: 0.7;
-  border: 3px solid #e53935 !important;
-  border-radius: 15px;
-  box-shadow: 0 0 10px rgba(229, 57, 53, 0.5);
+  opacity: 0.8;
+  border: 2.7px solid #d4a59a !important;
+  border-radius: 13.5px;
+  box-shadow: 0 0 10.8px rgba(212, 165, 154, 0.6),
+    inset 0 0 9px rgba(212, 165, 154, 0.3);
 }
 
 .dice-img {
-    width: 60px;
+  width: 95px;
   cursor: pointer;
   transition: all 0.3s;
-  border-radius: 10px;
+  border-radius: 9px;
+  filter: drop-shadow(1.8px 1.8px 2.7px rgba(0, 0, 0, 0.2));
 }
 
 .dice-img:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
+  filter: drop-shadow(2.7px 2.7px 4.5px rgba(0, 0, 0, 0.3));
 }
 
 /* Кнопки */
 .btn-picnic {
-  background-color: #81c784;
-  color: white;
+  background-color: #8b9a3c;
+  color: #f0f7da;
   border: none;
-  border-radius: 50px;
-  padding: 10px 25px;
+  border-radius: 45px;
+  padding: 9px 22.5px;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.9px;
   transition: all 0.3s;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  margin-left: 15px;
+  box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.15),
+    inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
+  margin-left: 13.5px;
+  text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.2);
 }
 
 .btn-picnic:hover {
-  background-color: #66bb6a;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  background-color: #5a7261;
+  transform: translateY(-1.8px);
+  box-shadow: 0 5.4px 10.8px rgba(0, 0, 0, 0.2),
+    inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-picnic-small {
-  background-color: #a5d6a7;
-  color: #1b5e20;
+  background-color: #d1dbab;
+  color: #2d3e32;
   border: none;
-  border-radius: 50px;
-  padding: 8px 20px;
+  border-radius: 45px;
+  padding: 7.2px 18px;
   font-weight: bold;
   transition: all 0.3s;
   display: inline-block;
-  margin: 10px 0;
+  margin: 9px 0;
   text-decoration: none;
+  box-shadow: 0 2.7px 5.4px rgba(0, 0, 0, 0.1),
+    inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-picnic-small:hover {
-  background-color: #81c784;
-  color: white;
+  background-color: #8b9a3c;
+  color: #f0f7da;
+  transform: translateY(-0.9px);
 }
 
 .roll-btn {
   display: inline-block;
   transition: all 0.3s;
+  filter: drop-shadow(1.8px 1.8px 2.7px rgba(0, 0, 0, 0.2));
 }
 
 .roll-btn:hover {
   transform: scale(1.05);
+  filter: drop-shadow(2.7px 2.7px 4.5px rgba(0, 0, 0, 0.3));
 }
 
 /* Таймер */
 .timer-container {
-  background-color: #fff;
+  background-color: #f0f7da;
+  background-image: url("https://www.transparenttextures.com/patterns/light-paper-fibers.png");
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.1),
+    inset 0 0 4.5px rgba(0, 0, 0, 0.05);
   margin: 0 auto;
+  border: 1px solid #d4e2d4;
 }
 
 .player-timer {
-  font-size: 0.8em;
-  color: #333;
-  margin: 4px 0;
+  font-size: 0.72em;
+  color: #3a5a40;
+  margin: 3.6px 0;
   font-weight: bold;
 }
 
 .active-timer {
-  color: #e53935;
+  color: #d4a59a;
+  text-shadow: 0 0 4.5px rgba(212, 165, 154, 0.5);
   animation: pulse 1s infinite;
 }
 
 /* Анимации */
 @keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.6; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes flash-green {
-  0% { background-color: #c8e6c9; }
-  100% { background-color: normal; }
+  0% {
+    background-color: #d4e2d4;
+  }
+  100% {
+    background-color: normal;
+  }
 }
 
 @keyframes flash-red {
-  0% { background-color: #ffcdd2; }
-  100% { background-color: normal; }
+  0% {
+    background-color: #f8d7da;
+  }
+  100% {
+    background-color: normal;
+  }
 }
 
 .flash-green {
@@ -208,14 +283,14 @@ input[type="text"]:focus {
   animation: flash-red 1s;
 }
 
-/* Трава и декорации */
+/* Трава */
 .grass {
   position: absolute;
-  bottom: -20px;
+  bottom: -18px;
   left: 0;
   width: 100%;
-  height: 40px;
-  background-image: url('grass.png');
+  height: 54px;
+  background-image: url("https://www.transparenttextures.com/patterns/grass-patch.png");
   background-repeat: repeat-x;
   z-index: 1;
 }
@@ -224,61 +299,71 @@ input[type="text"]:focus {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 60px;
-  background-image: url('grass.png');
+  height: 72px;
+  background-image: url("https://www.transparenttextures.com/patterns/grass-patch.png");
   background-repeat: repeat-x;
-  z-index: 10;
-}
-
-.ant {
-  position: absolute;
-  width: 30px;
-  height: 20px;
-  background-image: url('ant.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  bottom: 20px;
-  left: 10%;
-  animation: ant-walk 20s linear infinite;
-}
-
-.leaf {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  background-image: url('leaf.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  bottom: 25px;
-  right: 15%;
-  animation: leaf-float 8s ease-in-out infinite;
-}
-
-@keyframes ant-walk {
-  0% { left: 10%; transform: scaleX(1); }
-  49% { transform: scaleX(1); }
-  50% { left: 90%; transform: scaleX(-1); }
-  99% { transform: scaleX(-1); }
-  100% { left: 10%; transform: scaleX(1); }
-}
-
-@keyframes leaf-float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-15px) rotate(5deg); }
+  z-index: 1;
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
-  .header h1 {
-    font-size: 1.8rem;
+  .controls {
+    padding: 9px;
+    margin-top: 9px;
   }
-  
+
   .dice-area {
-    padding: 10px;
+    padding: 9px;
   }
-  
+
   .dice-img {
-    width: 80px;
-    height: auto;
+    width: 45px;
   }
+
+  .picnic-table {
+    padding: 13.5px;
+  }
+
+  .btn-picnic {
+    padding: 7.2px 13.5px;
+    font-size: 0.81em;
+  }
+}
+
+.btns {
+  display: flex;
+  flex-direction: row;
+}
+
+a {
+  position: relative;
+  z-index: 10;
+}
+
+.cats {
+    width: 600px;
+    position: absolute;
+    left: -35px;
+    bottom: 105px;
+    z-index: 1;
+}
+
+.sleep {
+    width: 200px;
+    position: absolute;
+    right: -20px;
+    bottom: 345px;
+    z-index: 1;
+}
+
+#gameContainer{
+    z-index: 10;
+}
+
+.murka {
+    width: 400px;
+    position: absolute;
+    right: 5px;
+    bottom: 355px;
+    z-index: 1;
 }
