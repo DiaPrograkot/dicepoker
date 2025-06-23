@@ -94,3 +94,21 @@ table td[style*="red"] {
     50% { opacity: 0.5; }
     100% { opacity: 1; }
 }
+
+@keyframes flash-green {
+    0% { background-color: #a0ffa0; }
+    100% { background-color: normal; }
+}
+
+@keyframes flash-red {
+    0% { background-color: #ffa0a0; }
+    100% { background-color: normal; }
+}
+
+.flash-green {
+    animation: flash-green 1s;
+}
+
+.flash-red {
+    animation: flash-red 1s;
+}

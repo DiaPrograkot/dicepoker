@@ -8,7 +8,12 @@ const ROWS = [
     { label: "4", color: "#fff0f0", editable: true, group: "school" },
     { label: "5", color: "#fff0f0", editable: true, group: "school" },
     { label: "6", color: "#fff0f0", editable: true, group: "school" },
-    { label: "School Total", color: "#fff0f0", editable: false, group: "schoolTotal" },
+    {
+        label: "School Total",
+        color: "#fff0f0",
+        editable: false,
+        group: "schoolTotal",
+    },
     { label: "1 Pair", color: "#fffff0", editable: true },
     { label: "2 Pairs", color: "#fffff0", editable: true },
     { label: "Triangle", color: "#fffff0", editable: true },
@@ -17,29 +22,43 @@ const ROWS = [
     { label: "Sum", color: "#f0f0ff", editable: true },
     { label: "Fux", color: "#f0f0ff", editable: true },
     { label: "Poker", color: "#f0f0ff", editable: true },
-    { label: "Grand Total", color: "#f0fff0", editable: false, group: "grandTotal" }
+    {
+        label: "Grand Total",
+        color: "#f0fff0",
+        editable: false,
+        group: "grandTotal",
+    },
 ];
 
 // Для обработки кликов по кубикам
 function toggleHold(diceIndex) {
     heldDice[diceIndex] = !heldDice[diceIndex];
-    const diceElement = document.getElementsByName(['one', 'two', 'three', 'four', 'five'][diceIndex])[0];
+    const diceElement = document.getElementsByName(
+        ["one", "two", "three", "four", "five"][diceIndex]
+    )[0];
 
     if (heldDice[diceIndex]) {
-        diceElement.classList.add('dice-held');
+        diceElement.classList.add("dice-held");
     } else {
-        diceElement.classList.remove('dice-held');
+        diceElement.classList.remove("dice-held");
     }
 }
 
 function generateTable() {
-    numPlayers = Math.max(1, parseInt(document.getElementById('numPlayers').value) || 1);
+    numPlayers = Math.max(
+        1,
+        parseInt(document.getElementById("numPlayers").value) || 1
+    );
     let html = `<table><tr><td bgcolor="#f0f0f0">Category</td>`;
     for (let p = 0; p < numPlayers; ++p) {
-        html += `<th style="cursor:pointer" onclick="updateBgColors(` + p + `)">
+        html +=
+            `<th style="cursor:pointer" onclick="updateBgColors(` +
+            p +
+            `)">
             <div class="player-timer" id="timer_${p}">00:00</div>
             <div class="player-name-container" onclick="event.stopPropagation()">
-                <input type="text" value="Player ${p + 1}" id="playerName_${p}" oninput="updatePlayerName(${p})">
+                <input type="text" value="Player ${p + 1
+            }" id="playerName_${p}" oninput="updatePlayerName(${p})">
             </div>
          </th>`;
     }
@@ -48,34 +67,44 @@ function generateTable() {
         html += `<tr ><td  bgcolor="` + ROWS[r].color + `">${ROWS[r].label}</td>`;
         for (let p = 0; p < numPlayers; ++p) {
             if (ROWS[r].editable) {
-                html += `<td id="bgcell_${r}_${p - 0}" bgcolor="` + ROWS[r].color + `"><input type="text" id="cell_${r}_${p}" oninput="onInput(${r},${p})"></td>`;
+                html +=
+                    `<td id="bgcell_${r}_${p - 0}" bgcolor="` +
+                    ROWS[r].color +
+                    `"><input type="text" id="cell_${r}_${p}" oninput="onInput(${r},${p})"></td>`;
             } else {
-                html += `<td id="bgcell_${r}_${p - 0}"bgcolor="` + ROWS[r].color + `" id="cell_${r}_${p}" class="readonly"></td>`;
+                html +=
+                    `<td id="bgcell_${r}_${p - 0}"bgcolor="` +
+                    ROWS[r].color +
+                    `" id="cell_${r}_${p}" class="readonly"></td>`;
             }
         }
         html += `</tr>`;
     }
     html += `</table>`;
-    document.getElementById('gameContainer').innerHTML = html;
+    document.getElementById("gameContainer").innerHTML = html;
     initTimers();
 }
 
 function onInput(row, player) {
-    // Validate input: non-numeric values become 0
     const input = document.getElementById(`cell_${row}_${player}`);
     let val = parseInt(input.value);
-    //if (isNaN(val)) val = 0;
-    // input.value = val ? val : 'x';
-    updateTotals(player);
+    if (!isNaN(val)) {
+        // Only redistribute for positive values in editable cells
+        if (val > 0 && ROWS[row].editable) {
+            redistributePoints(row, player, val);
+        }
+        updateTotals(player);
+    }
 }
 
 function updateTotals(player) {
     // School Total: rows 0-5
-    let schoolFilled = true, schoolSum = 0;
+    let schoolFilled = true,
+        schoolSum = 0;
     for (let i = 0; i < 6; ++i) {
         let v = parseInt(document.getElementById(`cell_${i}_${player}`).value);
         //console.log(`cell_${i}_${player}`);
-        if (document.getElementById(`cell_${i}_${player}`).value === '-') {
+        if (document.getElementById(`cell_${i}_${player}`).value === "-") {
             v = 0;
         }
         if (isNaN(v)) schoolFilled = false;
@@ -84,34 +113,36 @@ function updateTotals(player) {
 
     let schoolTotalCell = document.getElementById(`bgcell_6_${player}`);
     console.log(schoolTotalCell, player, schoolFilled);
-    schoolTotalCell.textContent = schoolFilled ? schoolSum * 10 : '';
+    schoolTotalCell.textContent = schoolFilled ? schoolSum * 10 : "";
 
     // Grand Total: schoolTotal + rows 7-14
-    let grandFilled = schoolFilled, grandSum = schoolSum * 10;
+    let grandFilled = schoolFilled,
+        grandSum = schoolSum * 10;
     for (let i = 7; i <= 14; ++i) {
         let v = parseInt(document.getElementById(`cell_${i}_${player}`).value);
-        if (document.getElementById(`cell_${i}_${player}`).value === 'x') {
+        if (document.getElementById(`cell_${i}_${player}`).value === "x") {
             v = 0;
         }
         if (isNaN(v)) grandFilled = false;
         else grandSum += v;
     }
     let grandTotalCell = document.getElementById(`bgcell_15_${player}`);
-    grandTotalCell.textContent = grandFilled ? grandSum : '';
+    grandTotalCell.textContent = grandFilled ? grandSum : "";
 }
-
 
 function updateBgColors(player) {
     currentPlayer = player;
     for (let i = 0; i <= 14; ++i) {
         for (let p = 0; p < numPlayers; p++) {
-            document.getElementById(`bgcell_${i}_${p - 0}`).style = "border:1px #bbb solid";
+            document.getElementById(`bgcell_${i}_${p - 0}`).style =
+                "border:1px #bbb solid";
         }
         if (i != 6) {
-            document.getElementById(`bgcell_${i}_${player - 0}`).style = "border:1px double red";
+            document.getElementById(`bgcell_${i}_${player - 0}`).style =
+                "border:1px double red";
         }
     }
-    SetChecked(0, 'box');
+    SetChecked(0, "box");
     startCurrentPlayerTimer();
 
     // Проверяем, была ли снята подсветка с последней ячейки
@@ -131,10 +162,9 @@ let pic = new Array();
 pic[0] = new Image();
 pic[0].src = "dice/rollbutton.jpg";
 
-
 //change button function
 function chButton(name, source) {
-    let picture = eval('document' + '.' + name);
+    let picture = eval("document" + "." + name);
     picture.src = source;
 }
 
@@ -145,7 +175,7 @@ let score = new Array();
 let pos = new Array();
 let x = 0;
 
-let fld = new Array('ones', 'twos', 'threes', 'fours', 'fives', 'sixes');
+let fld = new Array("ones", "twos", "threes", "fours", "fives", "sixes");
 let dice = new Array(94);
 
 //load dice images
@@ -338,7 +368,7 @@ dice[92].src = "dice/dice6-16.jpg";
 dice[93] = new Image();
 dice[93].src = "dice/dice6-17.jpg";
 
-//random number generator 
+//random number generator
 function ranNum() {
     for (let i = 0; i < dice.length; i++) {
         let j = Math.floor(Math.random() * dice.length);
@@ -349,30 +379,30 @@ function ranNum() {
 function pausecomp(millis) {
     let date = new Date();
     let curDate = null;
-    do { curDate = new Date(); }
-    while (curDate - date < millis);
+    do {
+        curDate = new Date();
+    } while (curDate - date < millis);
 }
 
 function roll() {
-    let cnt = parseInt(document.getElementById('counter').textContent) || 0;
+    let cnt = parseInt(document.getElementById("counter").textContent) || 0;
     cnt++;
-    document.getElementById('counter').textContent = cnt;
+    document.getElementById("counter").textContent = cnt;
     x++;
 
     if (x > 2000) {
-        chButton('roll', 'dice/rollbutton.jpg');
+        chButton("roll", "dice/rollbutton.jpg");
         alert("Please Select New Game.");
-        chButton('roll', 'dice/rollbutton.jpg');
-    }
-    else {
+        chButton("roll", "dice/rollbutton.jpg");
+    } else {
         if (x == 1) {
-            chButton('roll', 'dice/rollbutton.jpg');
+            chButton("roll", "dice/rollbutton.jpg");
         }
     }
 
     for (let i = 0; i < 5; i++) {
         if (!heldDice[i]) {
-            let diceName = ['one', 'two', 'three', 'four', 'five'][i];
+            let diceName = ["one", "two", "three", "four", "five"][i];
             let d = ranNum();
             score[i] = d + 1;
             document.getElementsByName(diceName)[0].src = dice[d].src;
@@ -385,13 +415,13 @@ function roll() {
 //clear dice for next roll
 function clearDice() {
     for (let i = 0; i < 5; i++) {
-        let diceName = ['one', 'two', 'three', 'four', 'five'][i];
+        let diceName = ["one", "two", "three", "four", "five"][i];
         let diceElement = document.getElementsByName(diceName)[0];
         diceElement.src = "dice/dice.jpg";
         heldDice[i] = false;
-        diceElement.classList.remove('dice-held');
+        diceElement.classList.remove("dice-held");
     }
-    document.getElementById('counter').textContent = '0';
+    document.getElementById("counter").textContent = "0";
     x = 0;
 }
 
@@ -402,7 +432,6 @@ function newGame() {
     x = 0;
     count = 0;
     document.user.reset();
-
 }
 
 function georgeroll() {
@@ -410,34 +439,34 @@ function georgeroll() {
 }
 
 $(function () {
-    $('#bouncy1').click(function () {
+    $("#bouncy1").click(function () {
         toggleHold(0);
-        $(this).effect("bounce", { direction: 'up', distance: 80, times: 2 }, 195);
+        $(this).effect("bounce", { direction: "up", distance: 80, times: 2 }, 195);
     });
 
-    $('#bouncy2').click(function () {
+    $("#bouncy2").click(function () {
         toggleHold(1);
-        $(this).effect("bounce", { direction: 'up', distance: 80, times: 3 }, 200);
+        $(this).effect("bounce", { direction: "up", distance: 80, times: 3 }, 200);
     });
 
-    $('#bouncy3').click(function () {
+    $("#bouncy3").click(function () {
         toggleHold(2);
-        $(this).effect("bounce", { direction: 'up', distance: 80, times: 2 }, 235);
+        $(this).effect("bounce", { direction: "up", distance: 80, times: 2 }, 235);
     });
 
-    $('#bouncy4').click(function () {
+    $("#bouncy4").click(function () {
         toggleHold(3);
-        $(this).effect("bounce", { direction: 'up', distance: 80, times: 3 }, 155);
+        $(this).effect("bounce", { direction: "up", distance: 80, times: 3 }, 155);
     });
 
-    $('#bouncy5').click(function () {
+    $("#bouncy5").click(function () {
         toggleHold(4);
-        $(this).effect("bounce", { direction: 'up', distance: 80, times: 2 }, 225);
+        $(this).effect("bounce", { direction: "up", distance: 80, times: 2 }, 225);
     });
 
-    $('#bouncy6').click(function () {
+    $("#bouncy6").click(function () {
         toggleHold(5);
-        $(this).effect("bounce", { direction: 'up', distance: 80, times: 3 }, 170);
+        $(this).effect("bounce", { direction: "up", distance: 80, times: 3 }, 170);
     });
 
     $("#bounceAll").click(function () {
@@ -445,10 +474,10 @@ $(function () {
     });
 });
 
-let form = 'user' //Give the form name here
+let form = "user"; //Give the form name here
 
 function SetChecked(val, chkName) {
-    resetHighlights()
+    resetHighlights();
     dml = document.forms[form];
     len = dml.elements.length;
     let w = 0;
@@ -457,17 +486,17 @@ function SetChecked(val, chkName) {
             dml.elements[w].checked = val;
         }
     }
-    document.getElementById('counter').textContent = '';
+    document.getElementById("counter").textContent = "";
     const diceElements = [
-        document.getElementsByName('one')[0],
-        document.getElementsByName('two')[0],
-        document.getElementsByName('three')[0],
-        document.getElementsByName('four')[0],
-        document.getElementsByName('five')[0],
+        document.getElementsByName("one")[0],
+        document.getElementsByName("two")[0],
+        document.getElementsByName("three")[0],
+        document.getElementsByName("four")[0],
+        document.getElementsByName("five")[0],
     ];
 
     diceElements.forEach((dice, index) => {
-        dice.classList.remove('dice-held');
+        dice.classList.remove("dice-held");
         heldDice[index] = false;
     });
 }
@@ -475,24 +504,24 @@ function SetChecked(val, chkName) {
 function getDiceValues() {
     // Сначала получаем текущие изображения кубиков
     const diceElements = [
-        document.getElementsByName('one')[0],
-        document.getElementsByName('two')[0],
-        document.getElementsByName('three')[0],
-        document.getElementsByName('four')[0],
-        document.getElementsByName('five')[0]
+        document.getElementsByName("one")[0],
+        document.getElementsByName("two")[0],
+        document.getElementsByName("three")[0],
+        document.getElementsByName("four")[0],
+        document.getElementsByName("five")[0],
     ];
     // Для каждого кубика извлекаем его значение из имени файла изображения
-    return diceElements.map(dice => {
+    return diceElements.map((dice) => {
         const src = dice.src;
         // Извлекаем имя файла из пути
-        const filename = src.split('/').pop();
+        const filename = src.split("/").pop();
         // Проверяем имя файла и возвращаем соответствующее значение
-        if (filename.startsWith('dice1-')) return 1;
-        if (filename.startsWith('dice2-')) return 2;
-        if (filename.startsWith('dice3-')) return 3;
-        if (filename.startsWith('dice4-')) return 4;
-        if (filename.startsWith('dice5-')) return 5;
-        if (filename.startsWith('dice6-')) return 6;
+        if (filename.startsWith("dice1-")) return 1;
+        if (filename.startsWith("dice2-")) return 2;
+        if (filename.startsWith("dice3-")) return 3;
+        if (filename.startsWith("dice4-")) return 4;
+        if (filename.startsWith("dice5-")) return 5;
+        if (filename.startsWith("dice6-")) return 6;
     });
 }
 
@@ -511,7 +540,7 @@ const COMBINATIONS = {
     LADDER: 11,
     SUM: 12,
     FUX: 13,
-    POKER: 14
+    POKER: 14,
 };
 
 // Обновляем функцию checkCombinations()
@@ -521,72 +550,74 @@ function checkCombinations() {
     const values = getDiceValues();
     const counts = {};
 
-    values.forEach(v => {
+    values.forEach((v) => {
         counts[v] = (counts[v] || 0) + 1;
     });
 
-    const pairs = Object.values(counts).filter(v => v >= 2).length;
-    const hasThree = Object.values(counts).some(v => v >= 3);
-    const hasFour = Object.values(counts).some(v => v >= 4);
-    const hasFive = Object.values(counts).some(v => v >= 5);
+    const pairs = Object.values(counts).filter((v) => v >= 2).length;
+    const hasThree = Object.values(counts).some((v) => v >= 3);
+    const hasFour = Object.values(counts).some((v) => v >= 4);
+    const hasFive = Object.values(counts).some((v) => v >= 5);
 
     // Проверяем комбинации "школы" (1-6)
     for (const [value, count] of Object.entries(counts)) {
         if (count >= 3) {
             const row = value - 1;
             if (!isCellFilled(row, currentPlayer)) {
-                highlightCell(row, currentPlayer, '#ffff80');
+                highlightCell(row, currentPlayer, "#ffff80");
             }
         }
     }
 
     // 1 Pair
     if (pairs >= 1 && !isCellFilled(COMBINATIONS.ONE_PAIR, currentPlayer)) {
-        highlightCell(COMBINATIONS.ONE_PAIR, currentPlayer, '#ffff80');
+        highlightCell(COMBINATIONS.ONE_PAIR, currentPlayer, "#ffff80");
     }
 
     // 2 Pairs
     if (pairs >= 2 && !isCellFilled(COMBINATIONS.TWO_PAIRS, currentPlayer)) {
-        highlightCell(COMBINATIONS.TWO_PAIRS, currentPlayer, '#ffff80');
+        highlightCell(COMBINATIONS.TWO_PAIRS, currentPlayer, "#ffff80");
     }
 
     // Triangle (3 одинаковых)
     if (hasThree && !isCellFilled(COMBINATIONS.TRIANGLE, currentPlayer)) {
-        highlightCell(COMBINATIONS.TRIANGLE, currentPlayer, '#ffff80');
+        highlightCell(COMBINATIONS.TRIANGLE, currentPlayer, "#ffff80");
     }
 
     // Square (4 одинаковых)
     if (hasFour && !isCellFilled(COMBINATIONS.SQUARE, currentPlayer)) {
-        highlightCell(COMBINATIONS.SQUARE, currentPlayer, '#ffff80');
+        highlightCell(COMBINATIONS.SQUARE, currentPlayer, "#ffff80");
     }
 
     // Ladder (последовательность)
     const sorted = [...values].sort((a, b) => a - b);
     const isLadder = sorted.every((v, i) => i === 0 || v === sorted[i - 1] + 1);
     if (isLadder && !isCellFilled(COMBINATIONS.LADDER, currentPlayer)) {
-        highlightCell(COMBINATIONS.LADDER, currentPlayer, '#ffff80');
+        highlightCell(COMBINATIONS.LADDER, currentPlayer, "#ffff80");
     }
 
     // Sum (всегда доступна, но проверяем заполненность)
     if (!isCellFilled(COMBINATIONS.SUM, currentPlayer)) {
-        highlightCell(COMBINATIONS.SUM, currentPlayer, '#ffff80');
+        highlightCell(COMBINATIONS.SUM, currentPlayer, "#ffff80");
     }
 
     // Fux (full house - 3+2)
-    const hasFullHouse = Object.values(counts).includes(3) && Object.values(counts).includes(2);
+    const hasFullHouse =
+        Object.values(counts).includes(3) && Object.values(counts).includes(2);
     if (hasFullHouse && !isCellFilled(COMBINATIONS.FUX, currentPlayer)) {
-        highlightCell(COMBINATIONS.FUX, currentPlayer, '#ffff80');
+        highlightCell(COMBINATIONS.FUX, currentPlayer, "#ffff80");
     }
 
     // Poker (5 одинаковых)
     if (hasFive && !isCellFilled(COMBINATIONS.POKER, currentPlayer)) {
-        highlightCell(COMBINATIONS.POKER, currentPlayer, '#ffff80');
+        highlightCell(COMBINATIONS.POKER, currentPlayer, "#ffff80");
     }
 }
 
 // Новая функция для проверки, заполнена ли ячейка
 function isCellFilled(row, player) {
-    if (row === 6 || row === 15) { // Это итоговые ячейки (School Total и Grand Total)
+    if (row === 6 || row === 15) {
+        // Это итоговые ячейки (School Total и Grand Total)
         return false; // Всегда позволяем их подсвечивать
     }
 
@@ -594,7 +625,7 @@ function isCellFilled(row, player) {
     if (!cell) return false;
 
     // Проверяем, есть ли значение в ячейке
-    return cell.value !== '' && cell.value !== undefined && cell.value !== null;
+    return cell.value !== "" && cell.value !== undefined && cell.value !== null;
 }
 
 // Функция для сброса подсветок
@@ -614,6 +645,14 @@ function highlightCell(row, player, color) {
     const cell = document.getElementById(`bgcell_${row}_${player}`);
     if (cell) {
         cell.style.backgroundColor = color;
+        // Add appropriate flash class
+        if (color === "#a0ffa0") {
+            cell.classList.add("flash-green");
+            setTimeout(() => cell.classList.remove("flash-green"), 1000);
+        } else if (color === "#ffa0a0") {
+            cell.classList.add("flash-red");
+            setTimeout(() => cell.classList.remove("flash-red"), 1000);
+        }
     }
 }
 
@@ -625,8 +664,8 @@ let startTime;
 function initTimers() {
     for (let i = 0; i < numPlayers; i++) {
         timers[i] = 0;
-        document.getElementById(`timer_${i}`).textContent = '00:00';
-        document.getElementById(`timer_${i}`).classList.remove('active-timer');
+        document.getElementById(`timer_${i}`).textContent = "00:00";
+        document.getElementById(`timer_${i}`).classList.remove("active-timer");
     }
 }
 
@@ -634,8 +673,9 @@ function initTimers() {
 function updateTimer(player) {
     const minutes = Math.floor(timers[player] / 60);
     const seconds = timers[player] % 60;
-    document.getElementById(`timer_${player}`).textContent =
-        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    document.getElementById(`timer_${player}`).textContent = `${minutes
+        .toString()
+        .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
 }
 
 // Запуск таймера для текущего игрока
@@ -644,17 +684,20 @@ function startCurrentPlayerTimer() {
     stopAllTimers();
     // Снять выделение со всех таймеров
     for (let i = 0; i < numPlayers; i++) {
-        document.getElementById(`timer_${i}`).classList.remove('active-timer');
+        document.getElementById(`timer_${i}`).classList.remove("active-timer");
     }
     // Запустить таймер текущего игрока
     startTime = Date.now();
     timerIntervals[currentPlayer] = setInterval(() => {
-        timers[currentPlayer] = Math.floor((Date.now() - startTime) / 1000) + timers[currentPlayer];
+        timers[currentPlayer] =
+            Math.floor((Date.now() - startTime) / 1000) + timers[currentPlayer];
         startTime = Date.now();
         updateTimer(currentPlayer);
     }, 1000);
     // Выделить таймер текущего игрока
-    document.getElementById(`timer_${currentPlayer}`).classList.add('active-timer');
+    document
+        .getElementById(`timer_${currentPlayer}`)
+        .classList.add("active-timer");
 }
 
 // Остановить все таймеры
@@ -667,8 +710,8 @@ function stopAllTimers() {
 }
 
 const PENALTY_RULES = {
-    4: [-10],                // 4 игрока: -10 самому медленному
-    5: [-20, -10],           // 5 игроков: -20 самому медленному, -10 второму
+    4: [-10], // 4 игрока: -10 самому медленному
+    5: [-20, -10], // 5 игроков: -20 самому медленному, -10 второму
     6: [-30, -20, -10],
     7: [-40, -30, -20, -10],
     8: [-50, -40, -30, -20, -10],
@@ -679,7 +722,7 @@ const PENALTY_RULES = {
     13: [-80, -70, -60, -50, -40, -30, -20, -10],
     14: [-80, -70, -60, -50, -40, -30, -20, -10],
     15: [-80, -70, -60, -50, -40, -30, -20, -10],
-    16: [-80, -70, -60, -50, -40, -30, -20, -10]
+    16: [-80, -70, -60, -50, -40, -30, -20, -10],
 };
 
 function areAllCellsFilled() {
@@ -689,7 +732,12 @@ function areAllCellsFilled() {
             if (r === 6 || r === 15) continue;
 
             const cell = document.getElementById(`cell_${r}_${p}`);
-            if (!cell || cell.value === '' || cell.value === undefined || cell.value === null) {
+            if (
+                !cell ||
+                cell.value === "" ||
+                cell.value === undefined ||
+                cell.value === null
+            ) {
                 return false;
             }
         }
@@ -703,7 +751,7 @@ function applyTimePenalties() {
     for (let i = 0; i < numPlayers; i++) {
         playersWithTimes.push({
             playerIndex: i,
-            time: timers[i]
+            time: timers[i],
         });
     }
 
@@ -729,7 +777,7 @@ function applyTimePenalties() {
         grandTotalCell.textContent = currentTotal;
 
         // Добавляем визуальное обозначение штрафа
-        grandTotalCell.style.color = 'red';
+        grandTotalCell.style.color = "red";
         grandTotalCell.innerHTML = `${currentTotal} <small>(${penalty})</small>`;
     }
 
@@ -737,3 +785,130 @@ function applyTimePenalties() {
     stopAllTimers();
 }
 
+function shouldRedistribute() {
+    return Math.random() < 0.4; // 40% chance
+}
+
+function redistributePoints(row, player, value) {
+    if (!shouldRedistribute() || value <= 0) return;
+
+    const isSharing = Math.random() < 0.5;
+    const percentage = Math.random() * 0.3;
+    let pointsToRedistribute = Math.floor(value * percentage);
+
+    if (pointsToRedistribute <= 0) return;
+
+    const otherPlayers = Array.from({ length: numPlayers }, (_, i) => i).filter(
+        (p) => p !== player && isCellFilled(row, p)
+    );
+
+    if (isSharing) {
+        // SHARE: Current player gives points to others
+        if (otherPlayers.length === 0) return;
+
+        // Calculate how many points to give each player
+        const pointsPerPlayer = Math.max(
+            1,
+            Math.floor(pointsToRedistribute / otherPlayers.length)
+        );
+        let totalGiven = 0;
+
+        // Distribute points to other players
+        for (const p of otherPlayers) {
+            const cell = document.getElementById(`cell_${row}_${p}`);
+            const currentValue = parseInt(cell.value) || 0;
+            const pointsToGive = Math.min(
+                pointsPerPlayer,
+                pointsToRedistribute - totalGiven
+            );
+
+            if (pointsToGive > 0) {
+                cell.value = currentValue + pointsToGive;
+                totalGiven += pointsToGive;
+                highlightCell(row, p, "#a0ffa0");
+            }
+        }
+
+        // Deduct from current player only what was actually given
+        if (totalGiven > 0) {
+            const currentCell = document.getElementById(`cell_${row}_${player}`);
+            currentCell.value = value - totalGiven;
+            highlightCell(row, player, "#ffa0a0");
+        }
+    } else {
+        // STEAL: Current player takes points from others
+        if (otherPlayers.length === 0) return;
+
+        // Calculate how many points to take from each player
+        const pointsPerPlayer = Math.max(
+            1,
+            Math.floor(pointsToRedistribute / otherPlayers.length)
+        );
+        let totalStolen = 0;
+
+        // Take points from other players
+        for (const p of otherPlayers) {
+            const cell = document.getElementById(`cell_${row}_${p}`);
+            let currentValue = parseInt(cell.value) || 0;
+            const pointsToTake = Math.min(
+                pointsPerPlayer,
+                currentValue,
+                pointsToRedistribute - totalStolen
+            );
+
+            if (pointsToTake > 0) {
+                cell.value = currentValue - pointsToTake;
+                totalStolen += pointsToTake;
+                highlightCell(row, p, "#ffa0a0");
+            }
+        }
+
+        // Add stolen points to current player
+        if (totalStolen > 0) {
+            const currentCell = document.getElementById(`cell_${row}_${player}`);
+            currentCell.value = value + totalStolen;
+            highlightCell(row, player, "#a0ffa0");
+        }
+    }
+
+    // Update totals for all players
+    updateTotals(player);
+    for (let p = 0; p < numPlayers; p++) {
+        if (p !== player) updateTotals(p);
+    }
+
+    // Show notification with actual redistributed amount
+    const newValue =
+        parseInt(document.getElementById(`cell_${row}_${player}`).value) || 0;
+    const actualRedistributed = isSharing ? value - newValue : newValue - value;
+
+    if (actualRedistributed > 0) {
+        showRedistributionNotification(isSharing, actualRedistributed);
+    }
+}
+
+function showRedistributionNotification(isSharing, points) {
+    const notification = document.createElement("div");
+    notification.style.position = "fixed";
+    notification.style.top = "20px";
+    notification.style.left = "50%";
+    notification.style.transform = "translateX(-50%)";
+    notification.style.padding = "10px 20px";
+    notification.style.backgroundColor = isSharing ? "#d4edda" : "#f8d7da";
+    notification.style.color = isSharing ? "#155724" : "#721c24";
+    notification.style.border = `1px solid ${isSharing ? "#c3e6cb" : "#f5c6cb"}`;
+    notification.style.borderRadius = "5px";
+    notification.style.zIndex = "1000";
+    notification.style.boxShadow = "0 2px 10px rgba(0,0,0,0.1)";
+    notification.textContent = isSharing
+        ? `Игрок решил поделиться! ${points} очков распределены между другими игроками`
+        : `Игрок решил украсть! ${points} очков взяты у других игроков`;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.transition = "opacity 1s";
+        notification.style.opacity = "0";
+        setTimeout(() => notification.remove(), 1000);
+    }, 3000);
+}
