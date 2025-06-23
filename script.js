@@ -113,6 +113,11 @@ function updateBgColors(player) {
     }
     SetChecked(0, 'box');
     startCurrentPlayerTimer();
+    
+    // Проверяем, была ли снята подсветка с последней ячейки
+    if (areAllCellsFilled()) {
+        applyTimePenalties();
+    }
 }
 
 function updatePlayerName(player) {
@@ -660,3 +665,75 @@ function stopAllTimers() {
         }
     }
 }
+
+const PENALTY_RULES = {
+    4: [-10],                // 4 игрока: -10 самому медленному
+    5: [-20, -10],           // 5 игроков: -20 самому медленному, -10 второму
+    6: [-30, -20, -10],
+    7: [-40, -30, -20, -10],
+    8: [-50, -40, -30, -20, -10],
+    9: [-60, -50, -40, -30, -20, -10],
+    10: [-70, -60, -50, -40, -30, -20, -10],
+    11: [-80, -70, -60, -50, -40, -30, -20, -10],
+    12: [-80, -70, -60, -50, -40, -30, -20, -10],
+    13: [-80, -70, -60, -50, -40, -30, -20, -10],
+    14: [-80, -70, -60, -50, -40, -30, -20, -10],
+    15: [-80, -70, -60, -50, -40, -30, -20, -10],
+    16: [-80, -70, -60, -50, -40, -30, -20, -10]
+};
+
+function areAllCellsFilled() {
+    for (let p = 0; p < numPlayers; p++) {
+        for (let r = 0; r < ROWS.length; r++) {
+            // Пропускаем итоговые ячейки (School Total и Grand Total)
+            if (r === 6 || r === 15) continue;
+            
+            const cell = document.getElementById(`cell_${r}_${p}`);
+            if (!cell || cell.value === '' || cell.value === undefined || cell.value === null) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function applyTimePenalties() {
+    // Создаем массив объектов {playerIndex, time} для сортировки
+    const playersWithTimes = [];
+    for (let i = 0; i < numPlayers; i++) {
+        playersWithTimes.push({
+            playerIndex: i,
+            time: timers[i]
+        });
+    }
+    
+    // Сортируем игроков по времени (от большего к меньшему)
+    playersWithTimes.sort((a, b) => b.time - a.time);
+    
+    // Получаем правила для текущего количества игроков
+    const penalties = PENALTY_RULES[numPlayers] || [];
+    
+    // Применяем штрафы
+    for (let i = 0; i < penalties.length && i < playersWithTimes.length; i++) {
+        const playerIndex = playersWithTimes[i].playerIndex;
+        const penalty = penalties[i];
+        
+        // Получаем текущий Grand Total
+        const grandTotalCell = document.getElementById(`bgcell_15_${playerIndex}`);
+        let currentTotal = parseInt(grandTotalCell.textContent) || 0;
+        
+        // Применяем штраф
+        currentTotal += penalty;
+        
+        // Обновляем ячейку
+        grandTotalCell.textContent = currentTotal;
+        
+        // Добавляем визуальное обозначение штрафа
+        grandTotalCell.style.color = 'red';
+        grandTotalCell.innerHTML = `${currentTotal} <small>(${penalty})</small>`;
+    }
+    
+    // Останавливаем все таймеры, так как игра завершена
+    stopAllTimers();
+}
+

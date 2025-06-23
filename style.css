@@ -79,3 +79,20 @@ input[type="text"]:focus {
   50% { opacity: 0.5; }
   100% { opacity: 1; }
 }
+
+/* Добавим в конец файла */
+small {
+    font-size: 0.7em;
+    opacity: 0.8;
+}
+
+table td[style*="red"] {
+    font-weight: bold;
+    animation: blink 1s 3;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
