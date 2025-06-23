@@ -95,10 +95,10 @@ tr:nth-child(even) td {
 }
 
 /* Общий стиль для всех специальных категорий */
-tr:nth-child(11) td,  /* Ladder */
-tr:nth-child(12) td,  /* Sum */
-tr:nth-child(13) td,  /* Fux */
-tr:nth-child(14) td { /* Poker */
+tr:nth-child(13) td,  /* Ladder */
+tr:nth-child(14) td,  /* Sum */
+tr:nth-child(15) td,  /* Fux */
+tr:nth-child(16) td { /* Poker */
   background-color: rgba(212, 219, 171, 0.9) !important; /* Основной желто-зеленый цвет */
   font-weight: bold;
   color: #2d3e32; /* Темный текст */
@@ -233,13 +233,13 @@ tr:nth-child(14) td { /* Poker */
 
 .player-timer {
   font-size: 0.72em;
-  color: #3a5a40;
+  color: #eaf1d1;
   margin: 3.6px 0;
   font-weight: bold;
 }
 
 .active-timer {
-  color: #d4a59a;
+  color: #000000;
   text-shadow: 0 0 4.5px rgba(212, 165, 154, 0.5);
   animation: pulse 1s infinite;
 }
@@ -366,4 +366,14 @@ a {
     right: 5px;
     bottom: 355px;
     z-index: 1;
+}
+
+.btn-picnic:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.btn-picnic-small:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }

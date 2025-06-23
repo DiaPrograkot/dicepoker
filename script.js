@@ -134,12 +134,12 @@ function updateBgColors(player) {
     currentPlayer = player;
     for (let i = 0; i <= 14; ++i) {
         for (let p = 0; p < numPlayers; p++) {
-            document.getElementById(`bgcell_${i}_${p - 0}`).style =
-                "border:1px #bbb solid";
+            document.getElementById(`bgcell_${i}_${p - 0}`).style = 
+                "border: 1px solid #d4e2d4"; // Светло-зеленая граница по умолчанию
         }
         if (i != 6) {
-            document.getElementById(`bgcell_${i}_${player - 0}`).style =
-                "border:1px double red";
+            document.getElementById(`bgcell_${i}_${player - 0}`).style = 
+                "border: 2px solid #8b9a3c"; // Основной зеленый цвет для выделения
         }
     }
     SetChecked(0, "box");
