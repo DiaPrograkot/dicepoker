@@ -35,12 +35,16 @@ function toggleHold(diceIndex) {
     heldDice[diceIndex] = !heldDice[diceIndex];
     const diceElement = document.getElementsByName(
         ["one", "two", "three", "four", "five"][diceIndex]
-    )[0];
+    )[0].parentNode; // Родительский элемент для анимации
 
     if (heldDice[diceIndex]) {
-        diceElement.classList.add("dice-held");
+        diceElement.classList.add("dice-lock-animation");
+        setTimeout(() => {
+            diceElement.classList.remove("dice-lock-animation");
+            diceElement.querySelector('img').classList.add("dice-held");
+        }, 300);
     } else {
-        diceElement.classList.remove("dice-held");
+        diceElement.querySelector('img').classList.remove("dice-held");
     }
 }
 
@@ -134,11 +138,11 @@ function updateBgColors(player) {
     currentPlayer = player;
     for (let i = 0; i <= 14; ++i) {
         for (let p = 0; p < numPlayers; p++) {
-            document.getElementById(`bgcell_${i}_${p - 0}`).style = 
+            document.getElementById(`bgcell_${i}_${p - 0}`).style =
                 "border: 1px solid #d4e2d4"; // Светло-зеленая граница по умолчанию
         }
         if (i != 6) {
-            document.getElementById(`bgcell_${i}_${player - 0}`).style = 
+            document.getElementById(`bgcell_${i}_${player - 0}`).style =
                 "border: 2px solid #8b9a3c"; // Основной зеленый цвет для выделения
         }
     }
@@ -399,13 +403,23 @@ function roll() {
             chButton("roll", "dice/rollbutton.jpg");
         }
     }
-
     for (let i = 0; i < 5; i++) {
         if (!heldDice[i]) {
             let diceName = ["one", "two", "three", "four", "five"][i];
-            let d = ranNum();
-            score[i] = d + 1;
-            document.getElementsByName(diceName)[0].src = dice[d].src;
+            let diceElement = document.getElementsByName(diceName)[0];
+            diceElement.classList.add("dice-rolling");
+
+            // Задержка перед установкой нового изображения, чтобы анимация была видна
+            setTimeout(() => {
+                let d = ranNum();
+                score[i] = d + 1;
+                diceElement.src = dice[d].src;
+
+                // Удаляем класс анимации после завершения
+                setTimeout(() => {
+                    diceElement.classList.remove("dice-rolling");
+                }, 500); // Соответствует длительности анимации
+            }, 100);
         }
     }
 
@@ -441,7 +455,6 @@ function georgeroll() {
 $(function () {
     $("#bouncy1").click(function () {
         toggleHold(0);
-        $(this).effect("bounce", { direction: "up", distance: 80, times: 2 }, 195);
     });
 
     $("#bouncy2").click(function () {
