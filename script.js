@@ -913,16 +913,15 @@ function showRedistributionNotification(isSharing, points) {
     notification.style.left = "50%";
     notification.style.transform = "translateX(-50%)";
     notification.style.padding = "10px 20px";
-    notification.style.backgroundColor = isSharing ? "#d4edda" : "#f8d7da";
+    notification.style.backgroundColor = isSharing ? "#d1dbab" : "#f8a041";
     notification.style.color = isSharing ? "#155724" : "#721c24";
     notification.style.border = `1px solid ${isSharing ? "#c3e6cb" : "#f5c6cb"}`;
     notification.style.borderRadius = "5px";
     notification.style.zIndex = "1000";
     notification.style.boxShadow = "0 2px 10px rgba(0,0,0,0.1)";
     notification.textContent = isSharing
-        ? `Игрок решил поделиться! ${points} очков распределены между другими игроками`
-        : `Игрок решил украсть! ${points} очков взяты у других игроков`;
-
+        ? `Sharing is caring! ${points} points have been distributed among other players`
+        : `Sorry, I need it more! ${points} points have been taken from other players`;
     document.body.appendChild(notification);
 
     setTimeout(() => {
