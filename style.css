@@ -181,7 +181,7 @@ td[style*="background-color"] {
 
 .dice-held {
   opacity: 0.8;
-  border: 2.7px solid #d4a59a !important;
+  border: 2.7px solid #8b9a3c !important;
   border-radius: 13.5px;
   box-shadow: 0 0 10.8px rgba(212, 165, 154, 0.6),
     inset 0 0 9px rgba(212, 165, 154, 0.3);
