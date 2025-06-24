@@ -393,15 +393,13 @@ function roll() {
     cnt++;
     document.getElementById("counter").textContent = cnt;
     
-    // Убрали увеличение x здесь, перенесём его после проверки
-    if (cnt > 1) { // Изменили условие на cnt > 1 вместо x > 2000
+    // Проверяем, не превышено ли максимальное количество бросков (3)
+    if (cnt > 3) {
         chButton("roll", "dice/rollbutton.jpg");
-        alert("Please Select New Game.");
+        alert("Maximum 3 rolls per turn allowed!");
         chButton("roll", "dice/rollbutton.jpg");
-        return; // Прерываем функцию, если превышен лимит бросков
+        return;
     }
-
-    x++; // Теперь увеличиваем x только когда действительно делаем бросок
 
     for (let i = 0; i < 5; i++) {
         if (!heldDice[i]) {
@@ -425,6 +423,7 @@ function roll() {
         if (cnt > 0) checkCombinations();
     }, 600);
 }
+
 
 //clear dice for next roll
 function clearDice() {
