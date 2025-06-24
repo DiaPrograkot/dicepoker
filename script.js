@@ -930,3 +930,25 @@ function showRedistributionNotification(isSharing, points) {
         setTimeout(() => notification.remove(), 1000);
     }, 3000);
 }
+
+// Получаем модальное окно
+const modal = document.getElementById("rulesModal");
+const btn = document.getElementById("rulesBtn");
+const span = document.getElementsByClassName("close")[0];
+
+// Когда пользователь нажимает на кнопку, открываем модальное окно
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// Когда пользователь нажимает на крестик, закрываем модальное окно
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Когда пользователь кликает вне модального окна, закрываем его
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}

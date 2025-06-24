@@ -10,12 +10,12 @@
 </head>
 
 <body class="picnic-theme">
-        <div class="controls">
-            <label>Number of Players:
-                <input type="number" id="numPlayers" min="1" max="16" value="2" style="width:40px;">
-            </label>
-            <button class="btn btn-picnic" onclick="generateTable()">Start Game</button>
-        </div>
+    <div class="controls">
+        <label>Number of Players:
+            <input type="number" id="numPlayers" min="1" max="16" value="2" style="width:40px;">
+        </label>
+        <button class="btn btn-picnic" onclick="generateTable()">Start Game</button>
+    </div>
 
     <div id="gameContainer"></div>
 
@@ -91,15 +91,49 @@
         </form>
     </div>
 
+    <button class="meowMurka" id="rulesBtn">?</button>
+
+
+    <!-- Добавьте это модальное окно перед закрывающим тегом </body> -->
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Game Rules: "Forest Poker"</h2>
+            <div class="rules-text">
+                <h3>Basic Rules:</h3>
+                <p>1. Each player gets up to 3 dice rolls per turn, with 4 rolls allowed in the final round.</p>
+                <p>2. After each roll, players can set aside certain dice by clicking on them.</p>
+                <p>3. The next roll re-rolls only the unselected dice.</p>
+
+                <h3>Combinations:</h3>
+                <p><strong>School (1-6):</strong> "-" - 3 dice of the same number, "-..." - points short, "+..." -
+                    points over.</p>
+                <p><strong>1 Pair:</strong> 2 dice with the same value.</p>
+                <p><strong>2 Pairs:</strong> 2 pairs of different values.</p>
+                <p><strong>Three of a Kind:</strong> 3 dice with the same value.</p>
+                <p><strong>Four of a Kind:</strong> 4 dice with the same value.</p>
+                <p><strong>Straight:</strong> 5 consecutive values (1-5 or 2-6).</p>
+                <p><strong>Sum:</strong> Total of all dice.</p>
+                <p><strong>Full House:</strong> 3 dice of one value and 2 dice of another value.</p>
+                <p><strong>Poker:</strong> 5 dice with the same value.</p>
+                <p><strong>x</strong> - if no valid combination is available.</p>
+
+                <h3>Special Features:</h3>
+                <p>- Time penalties for the slowest players.</p>
+                <p>- Chance to "steal" or "share" points with other players.</p>
+            </div>
+        </div>
+    </div>
     <div class="picnic-footer">
         <div class="ant"></div>
         <div class="leaf"></div>
     </div>
-<img class="cats" src="dice/cats.png" alt="cats">
-<img class="murka" src="dice/murka.png" alt="meow">
-<!-- <img class="sleep" src="dice/sleep.png" alt="meow2"> -->
+    <img class="cats" src="dice/cats.png" alt="cats">
+    <img class="murka" src="dice/murka.png" alt="meow">
+    <!-- <img class="sleep" src="dice/sleep.png" alt="meow2"> -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
