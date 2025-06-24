@@ -94,15 +94,45 @@ tr:nth-child(even) td {
   font-weight: bold;
 }
 
-/* Общий стиль для всех специальных категорий */
-tr:nth-child(13) td,  /* Ladder */
-tr:nth-child(14) td,  /* Sum */
-tr:nth-child(15) td,  /* Fux */
-tr:nth-child(16) td { /* Poker */
-  background-color: rgba(212, 219, 171, 0.9) !important; /* Основной желто-зеленый цвет */
+/* Для Ladder (13-я строка) - выделяем только первую ячейку */
+tr:nth-child(13) td:first-child {
+  background-color: rgba(212, 219, 171, 0.9);
   font-weight: bold;
-  color: #2d3e32; /* Темный текст */
+  color: #2d3e32;
   position: relative;
+  z-index: 1;
+}
+
+/* Для Sum (14-я строка) - выделяем только первую ячейку */
+tr:nth-child(14) td:first-child {
+  background-color: rgba(212, 219, 171, 0.9);
+  font-weight: bold;
+  color: #2d3e32;
+  position: relative;
+  z-index: 1;
+}
+
+/* Для Fux (15-я строка) - выделяем только первую ячейку */
+tr:nth-child(15) td:first-child {
+  background-color: rgba(212, 219, 171, 0.9);
+  font-weight: bold;
+  color: #2d3e32;
+  position: relative;
+  z-index: 1;
+}
+
+/* Для Poker (16-я строка) - выделяем только первую ячейку */
+tr:nth-child(16) td:first-child {
+  background-color: rgba(212, 219, 171, 0.9);
+  font-weight: bold;
+  color: #2d3e32;
+  position: relative;
+  z-index: 1;
+}
+
+td[style*="background-color"] {
+    position: relative;
+    z-index: 10; /* Должен быть выше, чем у обычных ячеек */
 }
 
 /* Стили для кубиков */

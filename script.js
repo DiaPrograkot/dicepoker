@@ -392,38 +392,38 @@ function roll() {
     let cnt = parseInt(document.getElementById("counter").textContent) || 0;
     cnt++;
     document.getElementById("counter").textContent = cnt;
-    x++;
-
-    if (x > 2000) {
+    
+    // Убрали увеличение x здесь, перенесём его после проверки
+    if (cnt > 1) { // Изменили условие на cnt > 1 вместо x > 2000
         chButton("roll", "dice/rollbutton.jpg");
         alert("Please Select New Game.");
         chButton("roll", "dice/rollbutton.jpg");
-    } else {
-        if (x == 1) {
-            chButton("roll", "dice/rollbutton.jpg");
-        }
+        return; // Прерываем функцию, если превышен лимит бросков
     }
+
+    x++; // Теперь увеличиваем x только когда действительно делаем бросок
+
     for (let i = 0; i < 5; i++) {
         if (!heldDice[i]) {
             let diceName = ["one", "two", "three", "four", "five"][i];
             let diceElement = document.getElementsByName(diceName)[0];
             diceElement.classList.add("dice-rolling");
 
-            // Задержка перед установкой нового изображения, чтобы анимация была видна
             setTimeout(() => {
                 let d = ranNum();
                 score[i] = d + 1;
                 diceElement.src = dice[d].src;
 
-                // Удаляем класс анимации после завершения
                 setTimeout(() => {
                     diceElement.classList.remove("dice-rolling");
-                }, 500); // Соответствует длительности анимации
+                }, 500);
             }, 100);
         }
     }
 
-    if (cnt > 0) checkCombinations();
+    setTimeout(() => {
+        if (cnt > 0) checkCombinations();
+    }, 600);
 }
 
 //clear dice for next roll
@@ -459,27 +459,22 @@ $(function () {
 
     $("#bouncy2").click(function () {
         toggleHold(1);
-        $(this).effect("bounce", { direction: "up", distance: 80, times: 3 }, 200);
     });
 
     $("#bouncy3").click(function () {
         toggleHold(2);
-        $(this).effect("bounce", { direction: "up", distance: 80, times: 2 }, 235);
     });
 
     $("#bouncy4").click(function () {
         toggleHold(3);
-        $(this).effect("bounce", { direction: "up", distance: 80, times: 3 }, 155);
     });
 
     $("#bouncy5").click(function () {
         toggleHold(4);
-        $(this).effect("bounce", { direction: "up", distance: 80, times: 2 }, 225);
     });
 
     $("#bouncy6").click(function () {
         toggleHold(5);
-        $(this).effect("bounce", { direction: "up", distance: 80, times: 3 }, 170);
     });
 
     $("#bounceAll").click(function () {
@@ -563,6 +558,7 @@ function checkCombinations() {
     const values = getDiceValues();
     const counts = {};
 
+    // Подсчитываем количество каждого значения
     values.forEach((v) => {
         counts[v] = (counts[v] || 0) + 1;
     });
@@ -574,11 +570,9 @@ function checkCombinations() {
 
     // Проверяем комбинации "школы" (1-6)
     for (const [value, count] of Object.entries(counts)) {
-        if (count >= 3) {
-            const row = value - 1;
-            if (!isCellFilled(row, currentPlayer)) {
-                highlightCell(row, currentPlayer, "#ffff80");
-            }
+        const row = parseInt(value, 10) - 1;
+        if (row >= 0 && row <= 5 && count >= 3 && !isCellFilled(row, currentPlayer)) {
+            highlightCell(row, currentPlayer, "#ffff80");
         }
     }
 
@@ -615,8 +609,7 @@ function checkCombinations() {
     }
 
     // Fux (full house - 3+2)
-    const hasFullHouse =
-        Object.values(counts).includes(3) && Object.values(counts).includes(2);
+    const hasFullHouse = Object.values(counts).includes(3) && Object.values(counts).includes(2);
     if (hasFullHouse && !isCellFilled(COMBINATIONS.FUX, currentPlayer)) {
         highlightCell(COMBINATIONS.FUX, currentPlayer, "#ffff80");
     }
@@ -657,8 +650,15 @@ function resetHighlights() {
 function highlightCell(row, player, color) {
     const cell = document.getElementById(`bgcell_${row}_${player}`);
     if (cell) {
+        // Временно увеличиваем z-index для специальных строк
+        if (row >= 11 && row <= 14) { // Ladder, Sum, Fux, Poker
+            cell.style.zIndex = "20";
+        } else {
+            cell.style.zIndex = "10";
+        }
         cell.style.backgroundColor = color;
-        // Add appropriate flash class
+        
+        // Добавляем анимацию
         if (color === "#a0ffa0") {
             cell.classList.add("flash-green");
             setTimeout(() => cell.classList.remove("flash-green"), 1000);
@@ -666,6 +666,11 @@ function highlightCell(row, player, color) {
             cell.classList.add("flash-red");
             setTimeout(() => cell.classList.remove("flash-red"), 1000);
         }
+        
+        // Через 1 секунду возвращаем обычный z-index
+        setTimeout(() => {
+            cell.style.zIndex = "1";
+        }, 1000);
     }
 }
 
