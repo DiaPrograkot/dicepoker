@@ -504,14 +504,32 @@ a {
 .meowMurka {
     width: 30px;
     position: absolute;
-    right: 135px;
-    bottom: 625px;
-    z-index: 1;
+    right: 85px;
+    bottom: 575px;
+    z-index: 5;
     background-color: #8b9a3c;
     color: #f0f7da;
     border: none;
     border-radius: 45px;
-    padding: 9px 22.5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    transition: all 0.3s;
+    box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.15), inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
+    margin-left: 13.5px;
+    text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.2);
+}
+
+.meowSet {
+    width: 30px;
+    position: absolute;
+    left: 215px;
+    bottom: 425px;
+    z-index: 5;
+    background-color: #f9a040;
+    color: #f0f7da;
+    border: none;
+    border-radius: 45px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.9px;

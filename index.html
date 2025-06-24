@@ -128,6 +128,31 @@
         <div class="ant"></div>
         <div class="leaf"></div>
     </div>
+
+    <button class="meowSet" id="settingsBtn">⚙️</button>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Game Settings</h2>
+            <div class="settings-options">
+                <label>
+                    <input type="checkbox" id="timePenalties" checked>
+                    Enable time penalties for slowest players
+                </label>
+                <br>
+                <label>
+                    <input type="checkbox" id="pointRedistribution" checked>
+                    Enable stealing/sharing points with other players
+                </label>
+                <br>
+                <label>
+                    <input type="checkbox" id="showHints" checked>
+                    Show combination hints
+                </label>
+            </div>
+        </div>
+    </div>
     <img class="cats" src="dice/cats.png" alt="cats">
     <img class="murka" src="dice/murka.png" alt="meow">
     <!-- <img class="sleep" src="dice/sleep.png" alt="meow2"> -->

@@ -392,9 +392,9 @@ function roll() {
     let cnt = parseInt(document.getElementById("counter").textContent) || 0;
     cnt++;
     document.getElementById("counter").textContent = cnt;
-    
+
     // Проверяем, не превышено ли максимальное количество бросков (3)
-    if (cnt > 3) {
+    if (cnt > 4) {
         chButton("roll", "dice/rollbutton.jpg");
         alert("Maximum 3 rolls per turn allowed!");
         chButton("roll", "dice/rollbutton.jpg");
@@ -553,7 +553,7 @@ const COMBINATIONS = {
 // Обновляем функцию checkCombinations()
 function checkCombinations() {
     resetHighlights();
-
+    if (!gameSettings.showHints) return;
     const values = getDiceValues();
     const counts = {};
 
@@ -656,7 +656,7 @@ function highlightCell(row, player, color) {
             cell.style.zIndex = "10";
         }
         cell.style.backgroundColor = color;
-        
+
         // Добавляем анимацию
         if (color === "#a0ffa0") {
             cell.classList.add("flash-green");
@@ -665,7 +665,7 @@ function highlightCell(row, player, color) {
             cell.classList.add("flash-red");
             setTimeout(() => cell.classList.remove("flash-red"), 1000);
         }
-        
+
         // Через 1 секунду возвращаем обычный z-index
         setTimeout(() => {
             cell.style.zIndex = "1";
@@ -763,6 +763,7 @@ function areAllCellsFilled() {
 }
 
 function applyTimePenalties() {
+    if (!gameSettings.timePenalties) return;
     // Создаем массив объектов {playerIndex, time} для сортировки
     const playersWithTimes = [];
     for (let i = 0; i < numPlayers; i++) {
@@ -807,6 +808,7 @@ function shouldRedistribute() {
 }
 
 function redistributePoints(row, player, value) {
+    if (!gameSettings.pointRedistribution || !shouldRedistribute() || value <= 0) return;
     if (!shouldRedistribute() || value <= 0) return;
 
     const isSharing = Math.random() < 0.5;
@@ -936,18 +938,43 @@ const btn = document.getElementById("rulesBtn");
 const span = document.getElementsByClassName("close")[0];
 
 // Когда пользователь нажимает на кнопку, открываем модальное окно
-btn.onclick = function() {
+btn.onclick = function () {
     modal.style.display = "block";
 }
 
 // Когда пользователь нажимает на крестик, закрываем модальное окно
-span.onclick = function() {
+span.onclick = function () {
     modal.style.display = "none";
 }
 
 // Когда пользователь кликает вне модального окна, закрываем его
-window.onclick = function(event) {
+window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
+}
+
+let gameSettings = {
+    timePenalties: true,
+    pointRedistribution: true,
+    showHints: true
+};
+
+const settingsModal = document.getElementById("settingsModal");
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsClose = settingsModal.getElementsByClassName("close")[0];
+
+settingsBtn.onclick = function () {
+    // Загружаем текущие настройки в чекбоксы
+    document.getElementById("timePenalties").checked = gameSettings.timePenalties;
+    document.getElementById("pointRedistribution").checked = gameSettings.pointRedistribution;
+    document.getElementById("showHints").checked = gameSettings.showHints;
+    settingsModal.style.display = "block";
+}
+
+settingsClose.onclick = function () {
+    gameSettings.timePenalties = document.getElementById("timePenalties").checked;
+    gameSettings.pointRedistribution = document.getElementById("pointRedistribution").checked;
+    gameSettings.showHints = document.getElementById("showHints").checked;
+    settingsModal.style.display = "none";
 }
