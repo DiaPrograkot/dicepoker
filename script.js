@@ -977,3 +977,119 @@ settingsClose.onclick = function () {
     gameSettings.showHints = document.getElementById("showHints").checked;
     settingsModal.style.display = "none";
 }
+
+// Добавьте в начало файла с другими константами
+const FORTUNE_WHEEL_DELAY = 100; // Задержка между переключениями игроков в мс
+const FORTUNE_WHEEL_DURATION = 2000; // Общая длительность анимации в мс
+
+// Добавьте в конец файла
+const fortuneBtn = document.getElementById("fortuneBtn");
+
+fortuneBtn.onclick = function() {
+    spinFortuneWheel();
+}
+
+function spinFortuneWheel() {
+    // Проверяем, что игра начата
+    if (numPlayers === 0) return;
+    
+    // Блокируем кнопку на время анимации
+    fortuneBtn.disabled = true;
+    fortuneBtn.classList.add("wheel-spinning");
+    
+    // Определяем кандидатов для следующего хода
+    const candidates = getNextPlayerCandidates();
+    if (candidates.length === 0) return;
+    
+    let iterations = 0;
+    const maxIterations = FORTUNE_WHEEL_DURATION / FORTUNE_WHEEL_DELAY;
+    let lastPlayer = currentPlayer;
+    
+    const spinInterval = setInterval(() => {
+        // Выбираем случайного игрока из кандидатов
+        const randomIndex = Math.floor(Math.random() * candidates.length);
+        const nextPlayer = candidates[randomIndex];
+        
+        // Обновляем выделение
+        updateBgColors(nextPlayer);
+        lastPlayer = nextPlayer;
+        
+        iterations++;
+        if (iterations >= maxIterations) {
+            clearInterval(spinInterval);
+            fortuneBtn.classList.remove("wheel-spinning");
+            fortuneBtn.disabled = false;
+            
+            // Окончательный выбор игрока
+            selectFinalPlayer(candidates);
+        }
+    }, FORTUNE_WHEEL_DELAY);
+}
+
+function getNextPlayerCandidates() {
+    // Собираем статистику по заполненным ячейкам
+    const playersStats = [];
+    for (let p = 0; p < numPlayers; p++) {
+        let filledCells = 0;
+        for (let r = 0; r < ROWS.length; r++) {
+            if (r === 6 || r === 15) continue; // Пропускаем итоговые ячейки
+            
+            const cell = document.getElementById(`cell_${r}_${p}`);
+            if (cell && cell.value !== "" && cell.value !== undefined && cell.value !== null) {
+                filledCells++;
+            }
+        }
+        playersStats.push({
+            playerIndex: p,
+            filledCells: filledCells
+        });
+    }
+    
+    // Находим минимальное количество заполненных ячеек
+    const minFilled = Math.min(...playersStats.map(p => p.filledCells));
+    
+    // Возвращаем игроков с наименьшим количеством заполненных ячеек
+    return playersStats
+        .filter(p => p.filledCells === minFilled)
+        .map(p => p.playerIndex);
+}
+
+function selectFinalPlayer(candidates) {
+    // Если только один кандидат - выбираем его
+    if (candidates.length === 1) {
+        currentPlayer = candidates[0];
+        updateBgColors(currentPlayer);
+        return;
+    }
+    
+    // Иначе выбираем случайного из кандидатов
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+    currentPlayer = candidates[randomIndex];
+    updateBgColors(currentPlayer);
+    
+    // Показываем уведомление
+    showFortuneNotification(currentPlayer);
+}
+
+function showFortuneNotification(playerIndex) {
+    const playerName = document.getElementById(`playerName_${playerIndex}`).value;
+    const notification = document.createElement("div");
+    notification.style.position = "fixed";
+    notification.style.top = "50px";
+    notification.style.left = "50%";
+    notification.style.transform = "translateX(-50%)";
+    notification.style.padding = "10px 20px";
+    notification.style.backgroundColor = "#f9a040";
+    notification.style.color = "#fff";
+    notification.style.borderRadius = "5px";
+    notification.style.zIndex = "1000";
+    notification.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
+    notification.textContent = `The wheel of fortune has chosen: ${playerName}`;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.transition = "opacity 1s";
+        notification.style.opacity = "0";
+        setTimeout(() => notification.remove(), 1000);
+    }, 2000);
+}
