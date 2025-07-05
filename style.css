@@ -1,12 +1,12 @@
 /* Основные стили */
 body.picnic-theme {
-  font-family: "Comfortaa", cursive;
-  background: linear-gradient(to bottom, #e8f5e9, #c8e6c9);
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #f5f9f5, #e6f0e6);
   background-image: url("dice/bg.png");
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
-  color: #2d6a4f;
+  color: #3a5a40;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -18,12 +18,12 @@ body.picnic-theme {
 }
 
 .controls {
-  color: #2d3e32;
+  color: #3a4a3d;
   margin-top: 7px;
-  background: #d1dbab;
+  background: #e0e8d0;
   padding: 7px;
   border-radius: 13.5px;
-  box-shadow: 0 3.6px 13.5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3.6px 13.5px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(4.5px);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
@@ -32,24 +32,24 @@ body.picnic-theme {
 table {
   border-collapse: collapse;
   margin-top: 18px;
-  background: rgba(240, 247, 218, 0.9); /* Светло-зеленый фон с прозрачностью */
-  box-shadow: 0 3.6px 18px rgba(0, 0, 0, 0.15);
+  background: rgba(245, 250, 230, 0.9);
+  box-shadow: 0 3.6px 18px rgba(0, 0, 0, 0.1);
   text-align: center;
   border-radius: 10.8px;
   overflow: hidden;
-  border: 2px solid #8b9a3c; /* Основной зеленый цвет */
+  border: 2px solid #7a8a4c;
 }
 
 th {
-  background: #8b9a3c; /* Основной зеленый цвет */
-  color: #f0f7da; /* Светло-кремовый текст */
+  background: #7a8a4c;
+  color: #f5faf0;
   font-weight: bold;
   width: 108px;
   padding: 9px 4.5px;
 }
 
 td {
-  border: 1px solid #d4e2d4; /* Светло-зеленая граница */
+  border: 1px solid #d0e0d0;
   text-align: center;
   min-width: 45px;
 }
@@ -59,90 +59,80 @@ input[type="text"] {
   width: 90%;
   text-align: center;
   border: none;
-  background: rgba(255, 255, 255, 0.7); /* Белый с прозрачностью */
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 5.4px;
   padding: 5.4px;
-  font-family: "Comfortaa", cursive;
-  color: #3a5a40; /* Темно-зеленый текст */
-  font-weight: bold;
-  border: 1px solid #d4e2d4; /* Светло-зеленая граница */
+  font-family: Arial, sans-serif;
+  color: #3a5a40;
+  font-weight: normal;
+  border: 1px solid #d0e0d0;
 }
 
 .readonly {
-  background: rgba(
-    210,
-    227,
-    188,
-    0.5
-  ); /* Светло-зеленый фон для неизменяемых ячеек */
-  font-weight: bold;
-  color: #3a5a40; /* Темно-зеленый текст */
+  background: rgba(220, 235, 200, 0.5);
+  font-weight: normal;
+  color: #3a5a40;
 }
 
 /* Обновленные цвета для строк таблицы */
 tr:nth-child(odd) td {
-  background-color: rgba(
-    240,
-    247,
-    218,
-    0.7
-  ); /* Светло-зеленый фон для нечетных строк */
+  background-color: rgba(245, 250, 230, 0.7);
 }
 
 tr:nth-child(even) td {
-  background-color: rgba(255, 255, 255, 0.7); /* Белый фон для четных строк */
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
 /* Стили для заголовков игроков */
 .player-name-container input {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid #d4e2d4;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #d0e0d0;
   border-radius: 4px;
   padding: 2px;
   text-align: center;
-  color: #2d3e32;
-  font-weight: bold;
+  color: #3a4a3d;
+  font-weight: normal;
 }
 
 /* Для Ladder (13-я строка) - выделяем только первую ячейку */
 tr:nth-child(13) td:first-child {
-  background-color: rgba(212, 219, 171, 0.9);
-  font-weight: bold;
-  color: #2d3e32;
+  background-color: rgba(220, 225, 180, 0.9);
+  font-weight: normal;
+  color: #3a4a3d;
   position: relative;
   z-index: 1;
 }
 
 /* Для Sum (14-я строка) - выделяем только первую ячейку */
 tr:nth-child(14) td:first-child {
-  background-color: rgba(212, 219, 171, 0.9);
-  font-weight: bold;
-  color: #2d3e32;
+  background-color: rgba(220, 225, 180, 0.9);
+  font-weight: normal;
+  color: #3a4a3d;
   position: relative;
   z-index: 1;
 }
 
 /* Для Fux (15-я строка) - выделяем только первую ячейку */
 tr:nth-child(15) td:first-child {
-  background-color: rgba(212, 219, 171, 0.9);
-  font-weight: bold;
-  color: #2d3e32;
+  background-color: rgba(220, 225, 180, 0.9);
+  font-weight: normal;
+  color: #3a4a3d;
   position: relative;
   z-index: 1;
 }
 
 /* Для Poker (16-я строка) - выделяем только первую ячейку */
 tr:nth-child(16) td:first-child {
-  background-color: rgba(212, 219, 171, 0.9);
-  font-weight: bold;
-  color: #2d3e32;
+  background-color: rgba(220, 225, 180, 0.9);
+  font-weight: normal;
+  color: #3a4a3d;
   position: relative;
   z-index: 1;
 }
 
 td[style*="background-color"] {
   position: relative;
-  z-index: 10; /* Должен быть выше, чем у обычных ячеек */
+  z-index: 10;
 }
 
 /* Стили для кубиков */
@@ -154,37 +144,37 @@ td[style*="background-color"] {
 }
 
 .picnic-table {
-  background-color: #5a5627;
+  background-color: #4a4627;
   border-radius: 18px;
   padding: 22.5px;
-  box-shadow: inset 0 0 13.5px rgba(0, 0, 0, 0.1),
-    0 9px 22.5px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 13.5px rgba(0, 0, 0, 0.05),
+    0 9px 22.5px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 3;
 }
 
 .dice-container {
-  background-color: #f0f7da;
+  background-color: #f5faf0;
   background-image: url("https://www.transparenttextures.com/patterns/light-paper-fibers.png");
   border-radius: 10.8px;
   padding: 10.8px;
-  box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.1),
-    inset 0 0 4.5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.05),
+    inset 0 0 4.5px rgba(0, 0, 0, 0.03);
   transition: all 0.3s;
-  border: 1px solid #d4e2d4;
+  border: 1px solid #d0e0d0;
 }
 
 .dice-container:hover {
   transform: translateY(-4.5px);
-  box-shadow: 0 5.4px 10.8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 5.4px 10.8px rgba(0, 0, 0, 0.1);
 }
 
 .dice-held {
   opacity: 0.8;
-  border: 2.7px solid #8b9a3c !important;
+  border: 2.7px solid #7a8a4c !important;
   border-radius: 13.5px;
-  box-shadow: 0 0 10.8px rgba(212, 165, 154, 0.6),
-    inset 0 0 9px rgba(212, 165, 154, 0.3);
+  box-shadow: 0 0 10.8px rgba(200, 165, 154, 0.4),
+    inset 0 0 9px rgba(200, 165, 154, 0.2);
   animation: none !important;
   transform: none !important;
 }
@@ -194,73 +184,73 @@ td[style*="background-color"] {
   cursor: pointer;
   transition: all 0.3s;
   border-radius: 9px;
-  filter: drop-shadow(1.8px 1.8px 2.7px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(1.8px 1.8px 2.7px rgba(0, 0, 0, 0.15));
 }
 
 .dice-img:hover {
   transform: scale(1.08);
-  filter: drop-shadow(2.7px 2.7px 4.5px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(2.7px 2.7px 4.5px rgba(0, 0, 0, 0.2));
 }
 
 /* Кнопки */
 .btn-picnic {
-  background-color: #8b9a3c;
-  color: #f0f7da;
+  background-color: #7a8a4c;
+  color: #f5faf0;
   border: none;
   border-radius: 45px;
   padding: 9px 22.5px;
-  font-weight: bold;
+  font-weight: normal;
   text-transform: uppercase;
   letter-spacing: 0.9px;
   transition: all 0.3s;
-  box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.15),
-    inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.1),
+    inset 0 0.9px 0 rgba(255, 255, 255, 0.15);
   margin-left: 13.5px;
-  text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.15);
 }
 
 .btn-picnic:hover {
-  background-color: #5a7261;
+  background-color: #5a6a41;
   transform: translateY(-1.8px);
-  box-shadow: 0 5.4px 10.8px rgba(0, 0, 0, 0.2),
-    inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5.4px 10.8px rgba(0, 0, 0, 0.15),
+    inset 0 0.9px 0 rgba(255, 255, 255, 0.15);
 }
 
 .btn-picnic-small {
-  background-color: #d1dbab;
-  color: #2d3e32;
+  background-color: #e0e8d0;
+  color: #3a4a3d;
   border: none;
   border-radius: 45px;
   padding: 7.2px 18px;
-  font-weight: bold;
+  font-weight: normal;
   transition: all 0.3s;
   display: inline-block;
   margin: 9px 0;
   text-decoration: none;
-  box-shadow: 0 2.7px 5.4px rgba(0, 0, 0, 0.1),
-    inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2.7px 5.4px rgba(0, 0, 0, 0.05),
+    inset 0 0.9px 0 rgba(255, 255, 255, 0.15);
 }
 
 .btn-picnic-small:hover {
-  background-color: #8b9a3c;
-  color: #f0f7da;
+  background-color: #7a8a4c;
+  color: #f5faf0;
   transform: translateY(-0.9px);
 }
 
 .roll-btn {
   display: inline-block;
   transition: all 0.3s;
-  filter: drop-shadow(1.8px 1.8px 2.7px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(1.8px 1.8px 2.7px rgba(0, 0, 0, 0.15));
 }
 
 .roll-btn:hover {
   transform: scale(1.05);
-  filter: drop-shadow(2.7px 2.7px 4.5px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(2.7px 2.7px 4.5px rgba(0, 0, 0, 0.2));
 }
 
 /* Таймер */
 .timer-container {
-  background-color: #f0f7da;
+  background-color: #f5faf0;
   background-image: url("https://www.transparenttextures.com/patterns/light-paper-fibers.png");
   border-radius: 50%;
   width: 45px;
@@ -268,22 +258,22 @@ td[style*="background-color"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.1),
-    inset 0 0 4.5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.05),
+    inset 0 0 4.5px rgba(0, 0, 0, 0.03);
   margin: 0 auto;
-  border: 1px solid #d4e2d4;
+  border: 1px solid #d0e0d0;
 }
 
 .player-timer {
   font-size: 0.72em;
-  color: #eaf1d1;
+  color: #e0e8d0;
   margin: 3.6px 0;
-  font-weight: bold;
+  font-weight: normal;
 }
 
 .active-timer {
   color: #000000;
-  text-shadow: 0 0 4.5px rgba(212, 165, 154, 0.5);
+  text-shadow: 0 0 4.5px rgba(200, 165, 154, 0.4);
   animation: pulse 1s infinite;
 }
 
@@ -302,7 +292,7 @@ td[style*="background-color"] {
 
 @keyframes flash-green {
   0% {
-    background-color: #d4e2d4;
+    background-color: #d0e0d0;
   }
   100% {
     background-color: normal;
@@ -311,7 +301,7 @@ td[style*="background-color"] {
 
 @keyframes flash-red {
   0% {
-    background-color: #f8d7da;
+    background-color: #f0d7da;
   }
   100% {
     background-color: normal;
@@ -457,33 +447,33 @@ a {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(5px);
 }
 
 .modal-content {
-  background-color: #f0f7da;
+  background-color: #f5faf0;
   margin: 5% auto;
   padding: 20px;
-  border: 2px solid #8b9a3c;
+  border: 2px solid #7a8a4c;
   border-radius: 15px;
   width: 80%;
   max-width: 700px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  font-family: "Comfortaa", cursive;
-  color: #2d6a4f;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+  color: #3a5a40;
 }
 
 .close {
-  color: #8b9a3c;
+  color: #7a8a4c;
   float: right;
   font-size: 28px;
-  font-weight: bold;
+  font-weight: normal;
   cursor: pointer;
 }
 
 .close:hover {
-  color: #5a7261;
+  color: #5a6a41;
 }
 
 .rules-text {
@@ -491,9 +481,9 @@ a {
 }
 
 .rules-text h3 {
-  color: #5a7261;
+  color: #5a6a41;
   margin-top: 20px;
-  border-bottom: 1px solid #d4e2d4;
+  border-bottom: 1px solid #d0e0d0;
   padding-bottom: 5px;
 }
 
@@ -507,17 +497,18 @@ a {
     right: 85px;
     bottom: 575px;
     z-index: 5;
-    background-color: #8b9a3c;
-    color: #f0f7da;
+    background-color: #7a8a4c;
+    color: #f5faf0;
     border: none;
     border-radius: 45px;
-    font-weight: bold;
+    font-weight: normal;
     text-transform: uppercase;
     letter-spacing: 0.9px;
     transition: all 0.3s;
-    box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.15), inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.1),
+    inset 0 0.9px 0 rgba(255, 255, 255, 0.15);
     margin-left: 13.5px;
-    text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.15);
 }
 
 .meowSet {
@@ -526,17 +517,18 @@ a {
     left: 215px;
     bottom: 425px;
     z-index: 5;
-    background-color: #f9a040;
-    color: #f0f7da;
+    background-color: #e89a40;
+    color: #f5faf0;
     border: none;
     border-radius: 45px;
-    font-weight: bold;
+    font-weight: normal;
     text-transform: uppercase;
     letter-spacing: 0.9px;
     transition: all 0.3s;
-    box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.15), inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.1),
+    inset 0 0.9px 0 rgba(255, 255, 255, 0.15);
     margin-left: 13.5px;
-    text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.15);
 }
 
 .meowFortune {
@@ -545,17 +537,18 @@ a {
     right: 35px;
     bottom: 10px;
     z-index: 5;
-    background-color: #d1dbab;
-    color: #f0f7da;
+    background-color: #e0e8d0;
+    color: #f5faf0;
     border: none;
     border-radius: 45px;
-    font-weight: bold;
+    font-weight: normal;
     text-transform: uppercase;
     letter-spacing: 0.9px;
     transition: all 0.3s;
-    box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.15), inset 0 0.9px 0 rgba(255, 255, 255, 0.2);
+    box-shadow: 0 3.6px 7.2px rgba(0, 0, 0, 0.1),
+    inset 0 0.9px 0 rgba(255, 255, 255, 0.15);
     margin-left: 13.5px;
-    text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 0.9px 0.9px rgba(0, 0, 0, 0.15);
 }
 
 .wheel-spinning {
